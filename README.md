@@ -18,7 +18,7 @@ Add this plugin as a git submodule to any project:
 
 ```bash
 # Add plugin as submodule
-git submodule add https://github.com/luqman-haqeem/kapitan-marketplace.git .claude-plugins/kapitan
+git submodule add https://github.com/LuqDaMan/kapitan-marketplace.git .claude-plugins/kapitan
 
 # Copy MCP config template to your project root
 cp .claude-plugins/kapitan/templates/mcp-minimal.json .mcp.json
