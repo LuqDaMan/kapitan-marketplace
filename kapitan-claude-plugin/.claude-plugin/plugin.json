@@ -1,11 +1,14 @@
 {
   "name": "kapitan-claude-plugin",
-  "version": "1.2.1",
+  "version": "1.2.2",
   "description": "A comprehensive Claude Code plugin with commands, agents, skills, hooks, and MCP servers",
   "author": {
     "name": "Luqman Nurhakim"
   },
   "repository": "https://github.com/LuqDaMan/kapitan-marketplace",
   "license": "MIT",
-  "keywords": ["kapitan", "tools", "productivity", "mlx", "commit", "code-review"]
+  "keywords": ["kapitan", "tools", "productivity", "mlx", "commit", "code-review"],
+  "agents": "./agents/",
+  "hooks": "./hooks/hooks.json",
+  "mcpServers": "./.mcp.json"
 }
