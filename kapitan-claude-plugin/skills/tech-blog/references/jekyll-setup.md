@@ -18,12 +18,26 @@ Configuration reference for a Jekyll blog following Gregory Gundersen's architec
 
 Pre-processed math rendering. KaTeX runs at build time, producing static HTML+CSS. No client-side JavaScript, no reflow on page load.
 
-- Use `{% katex %}` / `{% endkatex %}` for display math
-- Use `{% katex inline %}` / `{% endkatex %}` for inline math
-- Alternatively, configure to parse `$$...$$` and `$...$` via a custom plugin or Kramdown math engine
-- Numbered equations use `\tag{N}` inside the math block
+**Primary mode: `{% katexmm %}` wrapper.** Wrap the entire post body in `{% katexmm %}...{% endkatexmm %}` to enable `$...$` for inline math and `$$...$$` for display math throughout:
 
-**Not MathJax.** MathJax renders client-side and causes visible reflow. KaTeX is the default for this blog.
+```liquid
+---
+title: "Post Title"
+layout: default
+---
+{% katexmm %}
+
+Inline math like $x^2$ and display math:
+
+$$\mathcal{L}(\theta) = \sum_{i=1}^{N} \log p(x_i \mid \theta) \tag{1}$$
+
+{% endkatexmm %}
+```
+
+- Numbered equations use `\tag{N}` inside the math block
+- **Legacy/alternative:** Individual `{% katex %}` / `{% endkatex %}` blocks for display math and `{% katex inline %}` / `{% endkatex %}` for inline math. Prefer the `katexmm` wrapper — it's simpler and prevents missed math blocks.
+
+**Not MathJax.** MathJax is legacy (client-side rendering, visible reflow). KaTeX is the active renderer for this blog.
 
 ### jekyll-scholar
 
@@ -31,7 +45,7 @@ BibTeX-based academic citations.
 
 - Store references in a `.bib` file (e.g., `_bibliography/references.bib`)
 - Cite inline with `{% cite key %}` — renders as `(Author, Year)` with hyperlink
-- Auto-generates bibliography in the footer with `{% bibliography --cited %}`
+- **Do NOT include `{% bibliography --cited %}` in post bodies** — the `default.html` layout renders the bibliography automatically. Including it in the post creates a **duplicate bibliography** at the bottom of the page.
 - Configure in `_config.yml`:
 
 ```yaml

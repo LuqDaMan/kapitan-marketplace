@@ -215,7 +215,8 @@ This signals to the reader that the hard part is done and they can relax.
 
 ### Figure Standards
 
-- **Numbered sequentially** — Figure 1, Figure 2, etc.
+- **Numbered by narrative order** — First figure *referenced* in the text = Figure 1, regardless of creation order
+- **Captioned immediately after image** — `<div class='caption'>` goes right after `<img>`, inside the same `<div class='figure'>`
 - **Captioned** — every figure has a caption starting with "Figure N."
 - **Referenced in text** — "Consider Figure 3, which shows..." (never include an unreferenced figure)
 - **Caption is self-contained** — reader should understand the figure from the caption alone
@@ -290,7 +291,7 @@ Rate each criterion on a 1-5 scale. A publishable draft scores 4+ on all criteri
 |---|-----------|----------|-------------|---------------|
 | 1 | **Intuition before formalism** | Jumps straight to math | Some intuition, then math | 20-30% intuition-building, clear transition |
 | 2 | **Clear purpose** | No explicit goal | Goal implied but not stated | "The goal of this post is..." in opening |
-| 3 | **Visual elements** | No figures | Figures present but unreferenced | Numbered, captioned, referenced, progressive |
+| 3 | **Visual elements** | No figures | Figures present but unreferenced | Narrative-order numbered, captioned immediately after img, referenced, progressive |
 | 4 | **Signposting** | No transitions | Some section intros | Purpose, progress, preview, summary throughout |
 | 5 | **Worked examples** | None | One example, incomplete | Each concept has a worked example with numbers |
 | 6 | **Code quality** | Missing imports, no context | Runnable but undocumented | Imports, comments, theory connection, runnable |

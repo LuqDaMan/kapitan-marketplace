@@ -61,9 +61,11 @@ jekyll-scholar provides academic-style citations for Jekyll blogs:
 <!-- Multiple citations -->
 {% cite vaswani_2017_attention hochreiter_1997_long %}
 
-<!-- Bibliography at end of post (only cited works) -->
-{% bibliography --cited %}
+<!-- WARNING: Do NOT include {% bibliography --cited %} in post bodies.
+     The layout renders the bibliography automatically. -->
 ```
+
+> **Important:** Do NOT add `{% bibliography --cited %}` to your post. The `default.html` layout already renders the bibliography for cited works. Including it in the post body creates a duplicate bibliography at the bottom of the page.
 
 ### Bibliography File
 
@@ -577,6 +579,11 @@ Before adding any citation to `_bibliography/references.bib`:
 - Use proper LaTeX escaping: `{\"u}` for ü
 - Ensure `.bib` file is UTF-8 encoded
 - jekyll-scholar handles most Unicode, but LaTeX escaping is safer
+
+**Issue: Duplicate bibliography appears on the page**
+- The `default.html` layout already renders the bibliography automatically
+- Remove `{% bibliography --cited %}` from the post body — it causes a second, identical bibliography
+- Only use `{% cite key %}` inline; the bibliography appears without any explicit tag
 
 ---
 

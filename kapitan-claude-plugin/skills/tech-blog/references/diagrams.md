@@ -32,6 +32,39 @@ The default Jekyll blog uses custom HTML for figures rather than Markdown image 
 </div>
 ```
 
+### Figure Numbering: Narrative Order
+
+Number figures by the order they are **first referenced** in the text, not by creation order or source-document order.
+
+| First reference in text | Assigned number |
+|------------------------|-----------------|
+| "Consider [this diagram], which shows the architecture..." | Figure 1 |
+| "As shown in [this plot], the loss decreases..." | Figure 2 |
+| "[This comparison] highlights the difference..." | Figure 3 |
+
+If you introduce Figure 3 before Figure 2 in the prose, renumber so the first-mentioned is always Figure 1.
+
+### Caption Placement
+
+The `<div class='caption'>` must appear **immediately after** the `<img>` tag, inside the same `<div class='figure'>` container. Do not place captions outside the figure div or separate them with other elements.
+
+```html
+<!-- Correct -->
+<div class='figure'>
+    <img src='/image/topic/figure.png'
+         style='width: 60%; min-width: 250px;' />
+    <div class='caption'>
+        <span class='caption-label'>Figure 1.</span> Caption text here.
+    </div>
+</div>
+
+<!-- Wrong: caption outside figure div -->
+<div class='figure'>
+    <img src='/image/topic/figure.png' />
+</div>
+<div class='caption'>Figure 1. Caption text here.</div>
+```
+
 ### Figure Sizing Guide
 
 | Content Type | Width | Example |

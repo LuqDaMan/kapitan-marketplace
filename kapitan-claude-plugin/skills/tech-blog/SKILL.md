@@ -82,6 +82,73 @@ For the complete citation verification workflow, see `references/citation-workfl
 
 ---
 
+## CRITICAL: Jekyll Post Generation Rules
+
+**These rules prevent the most common rendering failures. Every rule was learned from real broken builds.**
+
+| # | Rule | Why |
+|---|------|-----|
+| 1 | Wrap entire post body in `{% katexmm %}...{% endkatexmm %}` | KaTeX won't render `$...$` or `$$...$$` without it |
+| 2 | Do NOT include `{% bibliography --cited %}` in posts | The layout renders the bibliography automatically — including it creates duplicates |
+| 3 | Image paths use `/image/{post-slug}/` | Other paths (e.g., `/assets/`, relative paths) break on the live site |
+| 4 | Number figures by narrative order | First figure *referenced* in text = Figure 1, regardless of creation order |
+| 5 | No CSS classes in post HTML | The site stylesheet handles all styling — custom classes in posts cause conflicts |
+| 6 | Never modify site infrastructure | Only touch `_posts/`, `_bibliography/`, `image/` — never `_layouts/`, `_includes/`, `css/`, `_config.yml` |
+
+### KaTeX Wrapping (Required)
+
+The entire post body (everything after the YAML frontmatter) must be wrapped in `{% katexmm %}...{% endkatexmm %}`. This enables `$...$` for inline math and `$$...$$` for display math throughout the post.
+
+```liquid
+---
+title: "Post Title"
+layout: default
+date: 2024-03-15
+---
+{% katexmm %}
+
+Your entire post content goes here. Inline math like $x^2$ and display math:
+
+$$\mathcal{L}(\theta) = \sum_{i=1}^{N} \log p(x_i \mid \theta) \tag{1}$$
+
+All math works because the whole post is inside the katexmm block.
+
+{% endkatexmm %}
+```
+
+**Do NOT use individual `{% katex %}...{% endkatex %}` blocks** — they are legacy/alternative syntax. The `katexmm` wrapper is simpler and prevents missed math blocks. MathJax is legacy; KaTeX is the active renderer.
+
+### Bibliography: Layout Renders It Automatically
+
+The site's `default.html` layout already includes the bibliography rendering logic. Adding `{% bibliography --cited %}` to a post body causes a **duplicate bibliography** at the bottom of the page.
+
+**Correct:** Just use `{% cite key %}` inline. The bibliography appears automatically.
+
+**Wrong:** Adding `{% bibliography --cited %}` at the end of the post.
+
+### Figure Numbering: Narrative Order
+
+Number figures by the order they are **first referenced** in the text, not by the order they were created or appear in a source document.
+
+| First reference in text | Figure number |
+|------------------------|---------------|
+| "Consider [this diagram], which shows..." | Figure 1 |
+| "As shown in [this plot]..." | Figure 2 |
+| "[This table] compares..." | Figure 3 |
+
+The `<div class='caption'>` must appear immediately after the `<img>` tag, inside the same `<div class='figure'>` container.
+
+### Boundary Rule: Never Modify Site Infrastructure
+
+Blog post generation should **only** create or modify files in:
+- `_posts/` — the post Markdown file
+- `_bibliography/` — BibTeX entries for citations
+- `image/` — figures and diagrams
+
+**Never** suggest changes to `_layouts/`, `_includes/`, `css/`, `_config.yml`, or any other site infrastructure files. If something seems broken in the rendering, the post content is wrong — not the site.
+
+---
+
 ## Workflow 0: Starting from Source Material
 
 When the user provides a codebase, paper, library, or project as source material, start here before the Core Workflow.
@@ -267,7 +334,7 @@ For each section:
 
 #### Math and Formulas
 
-When including mathematical content (KaTeX is the default, MathJax as legacy fallback):
+Wrap the entire post body in `{% katexmm %}...{% endkatexmm %}` (see [CRITICAL: Jekyll Post Generation Rules](#critical-jekyll-post-generation-rules)). This enables `$...$` for inline math and `$$...$$` for display math throughout the post. Do NOT use individual `{% katex %}` blocks.
 
 - Introduce notation before using it ("First, let's name things...")
 - Provide intuitive explanation alongside formal definitions
@@ -327,7 +394,8 @@ Use the HTML figure convention for the default Jekyll blog. For other platforms,
 ```
 
 Figure rules:
-- **Number sequentially** — Figure 1, Figure 2, etc.
+- **Number by narrative order** — First figure *referenced* in the text = Figure 1 (see [CRITICAL: Jekyll Post Generation Rules](#critical-jekyll-post-generation-rules))
+- **Caption immediately after image** — `<div class='caption'>` goes right after `<img>`, inside the same `<div class='figure'>`
 - **Caption is self-contained** — Reader understands the figure from caption alone
 - **Reference in text** — "Consider Figure 3, which shows..."
 - **Consistent design** — Same colors, fonts (Arial), and line weights across all figures
@@ -341,7 +409,7 @@ For the default Jekyll blog using jekyll-scholar:
 
 - Cite inline with `{% cite key %}` — renders as (Author, Year)
 - Store references in `_bibliography/references.bib`
-- Add bibliography at the post's end with `{% bibliography --cited %}`
+- Do **NOT** add `{% bibliography --cited %}` in the post — the layout renders it automatically (see [CRITICAL: Jekyll Post Generation Rules](#critical-jekyll-post-generation-rules))
 - Use consistent citation keys: `author_year_firstword` (e.g., `vaswani_2017_attention`)
 
 **When to cite:**
@@ -387,6 +455,12 @@ Before delivering the final draft, verify:
 - [ ] **Conclusion connects to purpose** — Restates insight, further reading included
 - [ ] **Table of contents** — Present if post > 1500 words
 - [ ] **Length matches scope** — Not padded, not rushed
+- [ ] **KaTeX wrapping** — Entire post body wrapped in `{% katexmm %}...{% endkatexmm %}`
+- [ ] **No bibliography tag** — Post does NOT contain `{% bibliography --cited %}`
+- [ ] **Image paths** — All images use `/image/{post-slug}/` absolute paths
+- [ ] **Figure numbering** — Figures numbered by narrative order (first referenced = Figure 1)
+- [ ] **No CSS classes** — Post HTML does not include custom CSS classes
+- [ ] **No infrastructure modifications** — Only `_posts/`, `_bibliography/`, `image/` touched
 
 For a detailed scoring rubric (10 criteria, 1-5 scale), consult `references/style-rubric.md`.
 
@@ -507,6 +581,14 @@ Spend approximately **equal time** on each of:
 **Issue: Wrong subtitle format**
 - *Symptom*: Subtitle is a fragment, a question, or doesn't start with "I"
 - *Fix*: Rewrite to: "I [verb] [topic] [using/by/from] [method/approach]." One sentence, period at the end.
+
+**Issue: Duplicate bibliography at page bottom**
+- *Symptom*: Two identical bibliographies appear at the bottom of the rendered page
+- *Fix*: Remove `{% bibliography --cited %}` from the post body. The `default.html` layout renders the bibliography automatically. See [CRITICAL: Jekyll Post Generation Rules](#critical-jekyll-post-generation-rules).
+
+**Issue: Math not rendering (KaTeX)**
+- *Symptom*: Raw `$...$` or `$$...$$` appears as plain text instead of rendered math
+- *Fix*: Wrap the entire post body in `{% katexmm %}...{% endkatexmm %}` (after the YAML frontmatter, before any content). See [CRITICAL: Jekyll Post Generation Rules](#critical-jekyll-post-generation-rules).
 
 ---
 
