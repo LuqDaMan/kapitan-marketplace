@@ -13,7 +13,7 @@
   },
   "exa": {
     "command": "npx",
-    "args": ["-y", "exa-mcp-server", "exaApiKey=${EXA_API_KEY}", "tools=web_search_exa,web_search_advanced_exa,get_code_context_exa,crawling_exa,company_research_exa,linkedin_search_exa,deep_researcher_start,deep_researcher_check"],
+    "args": ["-y", "exa-mcp-server"],
     "env": {
       "EXA_API_KEY": "${EXA_API_KEY}"
     }
