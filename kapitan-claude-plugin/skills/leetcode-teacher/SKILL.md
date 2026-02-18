@@ -207,6 +207,25 @@ For the full science and detailed examples behind each principle, see `reference
 
 ## 5. Workflow
 
+### Learner Profile Protocol
+
+The SessionStart hook automatically loads the learner profile into context. Look for `=== LEARNER PROFILE ===` delimiters in the conversation.
+
+**Using the profile:**
+- **Weakness calibration by status:**
+  - `recurring` → actively probe this gap during the session
+  - `improving` → monitor but don't over-scaffold; let the learner demonstrate growth
+  - `new` → watch for it, but don't restructure the session around a single observation
+  - `resolved (short-term)` → if `=== RETEST SUGGESTIONS ===` block is present, offer retests as optional warm-up problems
+- **Session continuity:** Read the last 5 session history entries. Acknowledge trajectory ("Last time you worked on sliding window and caught the edge case you'd been missing — nice progress").
+- **About Me:** Use for calibration (language preference, level, goals). If `[FIRST SESSION]` tag is present, populate About Me from observations during the session and confirm at end.
+
+**Post-compaction recovery:** If `~/.claude/leetcode-session-state.md` exists, read it for procedural reminders (session ID, write-back requirements). Delete the file after reading.
+
+**Fallback** (hook didn't fire, no `=== LEARNER PROFILE ===` in context): Read `~/.claude/leetcode-teacher-profile.md` manually. If it doesn't exist, create both files with templates per `references/learner-profile-spec.md`.
+
+**Behavioral rule:** Use profile silently to calibrate. Don't dump contents to the learner. Reference specific observations naturally when relevant (e.g., "I notice you've struggled with empty input checks before — let's make sure we cover that").
+
 ### Step 0: Mode Detection
 
 Before anything else, classify the user's intent into one of two modes:
@@ -235,6 +254,8 @@ Accept problems in multiple formats:
 
 ### Step 2: Problem Classification
 
+> **Profile calibration:** After classifying the problem, check Known Weaknesses for gaps tagged to this pattern or problem type. Plan to probe those gaps explicitly during Steps 4-5. If the learner has a `recurring` weakness related to this pattern, make it a deliberate focus of the session.
+
 Classify into one of four categories:
 
 | Category | Examples | Special Handling |
@@ -256,6 +277,8 @@ Then:
 - If confused → provide the analogy, then ask them to restate it
 
 ### Step 4: Brute Force (Guided)
+
+> **Profile calibration:** Adjust scaffolding based on the learner's trajectory for this pattern. `improving` = lighter scaffolding (let them work longer before hinting). `recurring`/plateauing = change angle (try a different analogy or representation). `new` = use default scaffolding.
 
 > "What's the simplest approach you can think of, even if it's slow?"
 
@@ -326,6 +349,31 @@ Metacognition prompts:
 
 Produce structured Markdown study notes (see Output Format below). Offer to save to a file.
 
+### Step 8B: Update Learner Profile
+
+After generating study notes, update the persistent learner profile. **Write ledger first (source of truth), then profile (elaboration).**
+
+1. **Append row to Ledger** (`~/.claude/leetcode-teacher-ledger.md`):
+   - ISO timestamp (`YYYY-MM-DDTHH:MM`), session_id (from `=== SESSION METADATA ===` in context if available, else `manual`), problem name, pattern, mode (`learning`), verdict label (`solved_independently` / `solved_with_minor_hints` / `solved_with_significant_scaffolding` / `did_not_reach_solution`), gaps (semicolon-separated tags, or `none`), review due date.
+
+2. **Append to Session History** in profile (`~/.claude/leetcode-teacher-profile.md`), newest first. Enforce 20-entry cap by removing the oldest entry if needed. Use the semi-structured format:
+   ```
+   ### [ISO timestamp] | [problem-name] | learning | [verdict_label]
+   Gaps: [semicolon-separated tags, or "none"]
+   Review: [ISO date]
+   ---
+   [2-4 sentences of natural language observations]
+   ```
+   Verdict and gap tags **must match** the ledger row exactly.
+
+3. **Update Known Weaknesses**:
+   - **Gap observed again** → update `Last tested`, `Last failed`, reset `Last clean streak start` to empty, set `Sessions since last failure` to 0. Status → `recurring` if was `new`, stays `recurring` if already was.
+   - **Gap NOT observed when expected** → update `Last tested`, increment `Sessions since last failure`. If streak just started, set `Last clean streak start` to current timestamp. After 3+ consecutive clean sessions: mark `resolved (short-term)`. For long-term: check that `Last clean streak start` spans 4+ weeks (verify against ledger).
+   - **New gap** → add with status `new`, `First observed: [ISO timestamp]`. Description **must** name a specific input class or code pattern (not "struggles with edge cases" but "misses empty input check on array problems").
+   - Enforce 10-entry active cap. If full, promote the most-resolved entry or ask the learner which to archive.
+
+4. **Confirm** briefly — don't dump the full profile. On first session (if `[FIRST SESSION]` tag was present), show the About Me draft populated from session observations and ask the learner to correct/confirm.
+
 ---
 
 ## 5B. Recall Mode Workflow
@@ -360,6 +408,8 @@ The user reconstructs their solution from memory. Your job is silent listening w
 **If the user asks for hints** → "In an interview setting, you'd need to work through this on your own. Give it your best shot, and we'll discuss after."
 
 ### R3: Edge Case Drill
+
+> **Profile calibration:** If Known Weaknesses includes edge-case entries (e.g., "misses empty input on array problems"), specifically test those even if they aren't default probes for this problem type. Note whether the learner catches them — this directly informs weakness status updates in R7B.
 
 After reconstruction, probe edge case awareness. Draw 2-4 questions from `references/recall-drills.md` Section 1 (Edge Case Bank), matched to the problem type.
 
@@ -415,6 +465,27 @@ Structure the debrief as:
 
 Generate structured Recall Mode output (see Section 8B).
 
+### R7B: Update Learner Profile
+
+After the R7 debrief, update the persistent learner profile. **Write ledger first, then profile.**
+
+1. **Append row to Ledger** (`~/.claude/leetcode-teacher-ledger.md`):
+   - ISO timestamp, session_id (from `=== SESSION METADATA ===` if available, else `manual`), problem, pattern, mode (`recall`), verdict from R7 (`strong_pass` / `pass` / `borderline` / `needs_work`), gaps (semicolon-separated tags), review due date.
+   - **Review interval from R7 verdict:** Strong Pass = previous interval x2 (minimum 7d), Pass = previous interval x1.5 (minimum 5d), Borderline = 2d, Needs Work = 1d. If no previous interval exists, use the minimums.
+
+2. **Append to Session History** in profile (newest first, enforce 20-entry cap by removing oldest if needed):
+   - Use the semi-structured format: `### [timestamp] | [problem] | recall | [verdict]` followed by `Gaps:`, `Review:`, `---`, and 2-4 observation sentences.
+   - Verdict and gap tags **must match** the ledger row.
+   - Note trajectory vs. previous sessions (consult ledger for older entries if needed).
+
+3. **Update Known Weaknesses** (same rules as Step 8B):
+   - Gap observed again → update `Last tested`, `Last failed`, reset `Last clean streak start`, status to `recurring`
+   - Gap NOT observed → update `Last tested`, increment `Sessions since last failure`, manage streak/resolution
+   - New gap → add with status `new`, must name specific input class or code pattern
+   - Enforce 10-entry active cap
+
+4. **Confirm** briefly. On first session, show About Me draft and ask learner to correct.
+
 ### Downshift Protocol (Recall → Learning)
 
 At **any recall step**, if the user demonstrates a fundamental gap (not a minor miss), transition to Learning Mode for that specific concept.
@@ -458,6 +529,27 @@ The reverse transition: a user starts in Learning Mode but demonstrates they alr
 
 If yes → jump to Recall Step R3 (Edge Case Drill), since they've already demonstrated reconstruction.
 If no → continue Learning Mode as normal.
+
+### Profile Review Mode
+
+**Trigger:** "how am I doing?", "what are my weaknesses?", "show me my progress", "review my profile"
+
+When the learner asks to review their progress, read **both** files:
+
+1. **Profile** (`~/.claude/leetcode-teacher-profile.md`) — current weaknesses, recent session history
+2. **Ledger** (`~/.claude/leetcode-teacher-ledger.md`) — full session record for longitudinal analysis
+
+Synthesize and present:
+- **Total sessions** and pattern coverage (which patterns practiced, which untouched)
+- **Active weaknesses** with trajectories (improving? plateauing? recurring?)
+- **Retention** — patterns not practiced in 4+ weeks
+- **Short-term resolutions** due for retest (2+ weeks since last test)
+- **Verdict distribution** — ratio of independent solves vs. scaffolded sessions
+- **Actionable next steps** — specific problems or patterns to focus on
+
+After presenting the summary, ask: "Want to edit anything in your profile? You can update About Me, remove a weakness you think is resolved, or correct anything that looks wrong."
+
+**Important:** The ledger may be large. Read it for this mode, but do not keep it in working memory after the review is complete. If the session continues into teaching/recall after a profile review, rely on the profile (not the ledger) for calibration.
 
 ---
 
@@ -734,3 +826,4 @@ If the user doesn't want any of these and says something like "just review it" o
 | `references/geometry.md` | Computational geometry for interviews: distance comparison (skip sqrt), overlapping circles/rectangles, rectangle area, K Closest Points |
 | `references/classic-interview-problems.md` | Trapping rain water, ugly numbers, missing/duplicate elements, pancake sorting, perfect rectangle, consecutive subsequences, interval operations, string multiplication |
 | `references/recall-drills.md` | Question banks for Recall Mode: edge case drills by problem type, complexity challenge probes, pattern classification questions, variation banks, mock interview simulation scripts |
+| `references/learner-profile-spec.md` | Persistent learner profile + ledger format specification: file formats, weakness lifecycle, session history format, verdict labels, dual-write rules |
