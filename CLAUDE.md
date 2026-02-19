@@ -34,7 +34,7 @@ The top-level `.claude-plugin/marketplace.json` is the marketplace registry poin
 - **`ml-paper-writing` skill** — ML research paper writing assistance.
 - **`tech-blog` skill** — Technical blog post generation for Jekyll with KaTeX math and BibTeX citations.
 - **`resume-builder` skill** — Resume tailoring for specific job descriptions with ATS optimization and XYZ bullet formatting.
-- **`leetcode-teacher` skill** — Socratic LeetCode/ML implementation teacher with evidence-based learning science. 48 reference files covering algorithm frameworks, problem patterns, data structures, sorting, linked lists, arrays, binary search, stacks/queues, matrix techniques, graphs, brute-force search, dynamic programming, greedy algorithms, combinatorics, numerical methods, advanced graph algorithms, linear algebra, and ML implementations.
+- **`leetcode-teacher` skill** — Socratic LeetCode/ML implementation teacher with evidence-based learning science. 50 reference files covering algorithm frameworks, problem patterns, data structures, sorting, linked lists, arrays, binary search, stacks/queues, matrix techniques, graphs, brute-force search, dynamic programming, greedy algorithms, combinatorics, numerical methods, advanced graph algorithms, linear algebra, and ML implementations.
 
 ## Python Linting Hook
 

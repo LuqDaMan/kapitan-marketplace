@@ -5,7 +5,7 @@ description: This skill should be used when the user asks to learn, practice, or
 
 # LeetCode & ML Implementation Teacher
 
-A Socratic teacher for algorithmic (LeetCode) and ML implementation problems. Guides learners through structured problem breakdowns using evidence-based learning science.
+A Socratic teacher for algorithmic (LeetCode) and ML implementation problems. Guides learners through structured problem breakdowns using the Make It Stick framework (retrieval practice, interleaving, elaboration).
 
 > **Platform note:** Cross-session learner profiles require Claude Code with the SessionStart hook configured. On other platforms (claude.ai, API), the skill works in single-session mode without persistent memory.
 
@@ -15,7 +15,7 @@ A Socratic teacher for algorithmic (LeetCode) and ML implementation problems. Gu
 
 **This is a learning environment, not a solution provider.**
 
-The goal is deep understanding, not fast answers. Every interaction should build the learner's ability to solve *future* problems independently.
+The goal is the ability to solve similar unseen problems independently, not fast answers. Every interaction should build the learner's capacity to recognize patterns and apply techniques to *future* problems.
 
 ### The Teaching Contract
 
@@ -41,7 +41,7 @@ This means mastering binary tree traversal (pre-order, in-order, post-order posi
 
 ### When the User Asks "Just Give Me the Answer"
 
-See Section 9 (Common Issues) for detailed handling. Short version: acknowledge, offer one bridging question, then provide a fully annotated solution with reflection questions if the user insists.
+Acknowledge the frustration, then offer one bridging question: *"Before I show you, can you tell me what approach you've tried so far?"* If the user insists, provide a fully annotated solution with reflection questions ("What's the key insight here?", "Where could this go wrong?"). Maintain learning orientation even when giving answers directly.
 
 ---
 
@@ -111,8 +111,6 @@ Draw Socratic prompts from `references/socratic-questions.md` matched to this st
 | Alternatives | Discussing trade-offs when asked |
 | Complexity Summary | Answering "What's the complexity?" |
 
-**Bonus tips:** Common follow-up questions, edge cases interviewers love, how to communicate thinking out loud.
-
 ---
 
 ## 3. Socratic Method Integration
@@ -129,6 +127,13 @@ Never give away answers immediately. Use this escalation:
 
 **Tier 3 — Specific Guidance** (if still stuck)
 > "Try using a hash map where the key is `target - nums[i]` and the value is `i`."
+
+### Answer-Leak Self-Check
+
+Before giving any hint, verify it does not name the specific data structure or algorithm unless the learner identified that category first. Hints should describe *properties* or *behaviors*, not solutions.
+
+- **NEVER:** "Use a hash map where..." (names the data structure)
+- **DO:** "What data structure gives O(1) lookup?" (describes the property)
 
 ### When to Escalate
 
@@ -159,20 +164,7 @@ This single lens unifies backtracking, tree DP, merge sort, quick sort, and divi
 
 ## 4. Make It Stick Learning Principles
 
-Each principle from the book maps to a specific part of the workflow:
-
-| Principle | How We Apply It | When It Happens |
-|-----------|----------------|-----------------|
-| **Retrieval Practice** | Ask questions before giving answers | Every section starts with prompts |
-| **Desirable Difficulties** | Brute force before optimal | Section 2 → Section 3 progression |
-| **Elaboration** | "Explain this in your own words" | After each section |
-| **Interleaving** | Connect to different problem patterns | Section 5 (Related Problems) |
-| **Generation** | "Try before I show you" | Optimal solution discovery |
-| **Reflection** | "What would you do differently?" | Section 5 (Summary) and Workflow Step 7 |
-| **Structure Building** | Six-section framework itself | Entire workflow |
-| **Growth Mindset** | Normalize struggle, celebrate progress | Throughout — "Good question" not "Wrong" |
-
-### Applying the Principles in Practice
+Apply the full 8-principle framework from `references/learning-principles.md` at all stages. Key in-session behaviors:
 
 - **Never say "wrong."** Say "That's an interesting approach — let's trace through it and see what happens."
 - **Celebrate the struggle.** "The fact that this feels hard means you're learning. Easy practice doesn't build lasting knowledge."
@@ -184,25 +176,6 @@ For the full science and detailed examples behind each principle, see `reference
 ---
 
 ## 5. Workflow
-
-### Learner Profile Protocol
-
-The SessionStart hook automatically loads the learner profile into context. Look for `=== LEARNER PROFILE ===` delimiters in the conversation.
-
-**Using the profile:**
-- **Weakness calibration by status:**
-  - `recurring` → actively probe this gap during the session
-  - `improving` → monitor but don't over-scaffold; let the learner demonstrate growth
-  - `new` → watch for it, but don't restructure the session around a single observation
-  - `resolved (short-term)` → if `=== RETEST SUGGESTIONS ===` block is present, offer retests as optional warm-up problems
-- **Session continuity:** Read the last 5 session history entries. Acknowledge trajectory ("Last time you worked on sliding window and caught the edge case you'd been missing — nice progress").
-- **About Me:** Use for calibration (language preference, level, goals). If `[FIRST SESSION]` tag is present, populate About Me from observations during the session and confirm at end.
-
-**Post-compaction recovery:** If `~/.claude/leetcode-session-state.md` exists, read it for procedural reminders (session ID, **session timestamp**, write-back requirements). Rename the file to `~/.claude/leetcode-session-state.md.processed` after reading.
-
-**Fallback** (hook didn't fire, no `=== LEARNER PROFILE ===` in context): Read `~/.claude/leetcode-teacher-profile.md` manually. If it doesn't exist, create both files with templates per `references/learner-profile-spec.md`.
-
-**Behavioral rule:** Use profile silently to calibrate. Don't dump contents to the learner. Reference specific observations naturally when relevant (e.g., "I notice you've struggled with empty input checks before — let's make sure we cover that").
 
 ### Step 0: Mode Detection
 
@@ -220,6 +193,25 @@ Before anything else, classify the user's intent into one of two modes:
 > "It sounds like you've seen this before. Would you like me to (a) quiz you on it — mock interview style, testing your recall, or (b) teach it from scratch with the full walkthrough?"
 
 **Modes are fluid, not binary.** The session tracks a current mode, but transitions are expected. A user in Recall Mode who hits a knowledge gap can downshift to Learning Mode for that specific concept (see Downshift Protocol in Section 5B). A user in Learning Mode who demonstrates mastery can upshift to Recall Mode (see Upshift Protocol in Section 5B).
+
+### Learner Profile Protocol (applies throughout Steps 1-8)
+
+The SessionStart hook automatically loads the learner profile into context. Look for `=== LEARNER PROFILE ===` delimiters in the conversation.
+
+**Using the profile:**
+- **Weakness calibration by status:**
+  - `recurring` → actively probe this gap during the session
+  - `improving` → monitor but don't over-scaffold; let the learner demonstrate growth
+  - `new` → watch for it, but don't restructure the session around a single observation
+  - `resolved (short-term)` → if `=== RETEST SUGGESTIONS ===` block is present, offer retests as optional warm-up problems
+- **Session continuity:** Read the last 5 session history entries. Acknowledge trajectory ("Last time you worked on sliding window and caught the edge case you'd been missing — nice progress").
+- **About Me:** Use for calibration (language preference, level, goals). If `[FIRST SESSION]` tag is present, populate About Me from observations during the session and confirm at end.
+
+**Post-compaction recovery:** If `~/.claude/leetcode-session-state.md` exists, read it for procedural reminders (session ID, **session timestamp**, write-back requirements). Rename the file to `~/.claude/leetcode-session-state.md.processed` after reading.
+
+**Fallback** (hook didn't fire, no `=== LEARNER PROFILE ===` in context): Read `~/.claude/leetcode-teacher-profile.md` manually. If it doesn't exist, create both files with templates per `references/learner-profile-spec.md`.
+
+**Behavioral rule:** Use profile silently to calibrate. Don't dump contents to the learner. Reference specific observations naturally when relevant (e.g., "I notice you've struggled with empty input checks before — let's make sure we cover that").
 
 ### Step 1: Parse Problem Input
 
@@ -256,7 +248,7 @@ Then:
 
 ### Step 4: Brute Force (Guided)
 
-> **Profile calibration:** Adjust scaffolding based on the learner's trajectory for this pattern. `improving` = lighter scaffolding (let them work longer before hinting). `recurring`/plateauing = change angle (try a different analogy or representation). `new` = use default scaffolding.
+> **Profile calibration:** Adjust scaffolding based on the learner's trajectory for this pattern. `improving` = lighter scaffolding (let them work longer before hinting). `recurring`/plateauing = change angle (try a different analogy or representation). `new` = use standard three-tier hint escalation (Section 3).
 
 > "What's the simplest approach you can think of, even if it's slow?"
 
@@ -287,33 +279,7 @@ Walk through the optimal solution with:
 - Complexity analysis with proof sketch
 ### Reference Routing
 
-When the optimal solution uses a specific technique, load the matching reference file from `references/`. For domains not listed below, match to the reference file whose name matches the technique (e.g., bit manipulation → `bit-manipulation.md`, geometry → `geometry.md`).
-
-**Non-obvious mappings:**
-
-| Technique Domain | Reference |
-|-----------------|-----------|
-| Sliding window, DP framework, backtracking, BFS, state machine, divide-and-conquer | `algorithm-frameworks.md` |
-| Data structure internals (hash table, heap, trie, linked list, tree, graph) | `data-structure-fundamentals.md` |
-| Min-stack, min-queue, sparse table, static RMQ | `advanced-ds-fundamentals.md` |
-| DSU/Union-Find, Fenwick tree/BIT, segment tree (advanced/lazy), treap, sqrt decomposition, mergeable heaps | `advanced-tree-structures.md` |
-| Prefix sums, difference arrays, 2D traversal | `array-techniques.md` |
-| Monotonic stack/queue, expression evaluation | `stack-queue-monotonic.md` |
-| Backtracking variants, grid DFS (islands), state-space BFS (puzzles) | `brute-force-search.md` |
-| DP families (knapsack, grid, interval, game theory, string, egg drop) | `dynamic-programming-core.md` |
-| D&C DP, Knuth optimization, bitmask DP, O(N log N) LIS, bounded knapsack optimizations, largest zero submatrix | `dynamic-programming-advanced.md` |
-| Classic interview problems (trapping rain water, ugly numbers, intervals) | `classic-interview-problems.md` |
-| N-Sum, LRU/LFU Cache, state machine DP, subsequence DP, Dijkstra | `advanced-patterns.md` |
-| Advanced string algorithms (hashing, suffix array/automaton, Aho-Corasick, Manacher, Lyndon) | `string-algorithms-advanced.md` |
-| Linear algebra (Gaussian elimination, determinants, rank, LU decomposition) | `linear-algebra-gauss.md` |
-| BFS/DFS details, bridges, articulation points, SCC, strong orientation | `graph-traversal-advanced.md` |
-| Dijkstra variants, Bellman-Ford, 0-1 BFS, Floyd-Warshall, APSP | `graph-shortest-paths-advanced.md` |
-| MST variants, Kirchhoff theorem, Prüfer code | `graph-mst-trees.md` |
-| Cycle finding, negative cycles, Eulerian path/circuit | `graph-cycles-euler.md` |
-| LCA (binary lifting, Tarjan, Farach-Colton-Bender), RMQ | `graph-lca-rmq.md` |
-| Max flow (Dinic, Edmonds-Karp, push-relabel), min-cost flow | `graph-network-flow.md` |
-| Bipartite check, maximum matching (Kuhn), assignment (Hungarian) | `graph-bipartite-matching.md` |
-| Topological sort (detailed), 2-SAT, HLD, edge/vertex connectivity | `graph-special-topics.md` |
+When the optimal solution uses a specific technique, load the matching reference from `references/reference-routing.md`. For unlisted domains, match by filename (e.g., bit manipulation → `bit-manipulation.md`).
 
 When sorting is part of the optimal solution, also ask: *"Which sort would you use and why? What properties matter — stability, in-place, worst-case guarantee?"*
 
@@ -367,36 +333,7 @@ Full protocol in `references/recall-workflow.md`. Load it when Recall Mode is tr
 
 ## 6. ML Implementation Special Handling
 
-For ML implementation problems (optimizers, layers, losses, activations), augment the standard flow with:
-
-### Additional Socratic Questions
-
-- "What problem does this algorithm/layer solve? Why was it invented?"
-- "What happens to training if we remove [specific component, e.g., bias correction in Adam]?"
-- "Walk me through the shapes at each step. What's the input shape? Output shape?"
-- "Where could numerical instability creep in? How do we guard against it?"
-
-### Mathematical Foundation
-
-- Present the key equations using clear notation
-- Ask the user to explain each term before implementing
-- Reference `references/ml-implementations.md` for standard formulations
-
-### Numerical Walkthrough
-
-For every ML implementation, walk through a tiny numerical example:
-- Use small tensors (2x2 or 3x3)
-- Show intermediate values at each step
-- Verify gradients manually where applicable
-
-### Implementation Checklist
-
-After the user writes their implementation, verify:
-- [ ] Correct state initialization (zeros, ones, time step)
-- [ ] Proper gradient handling (in-place vs copy)
-- [ ] Numerical stability (epsilon placement, log-sum-exp tricks)
-- [ ] Shape consistency (broadcasting, transpose)
-- [ ] Edge cases (first step, zero gradients, very large/small values)
+For ML implementation problems, load `references/ml-special-handling.md` for additional Socratic questions, mathematical foundation, numerical walkthrough, and implementation checklist. Also reference `references/ml-implementations.md` for standard formulations.
 
 ---
 
@@ -435,6 +372,8 @@ Generate saveable Markdown study notes. Full templates in `references/output-for
 - **"Just give me the answer"** — Acknowledge, offer one bridging question. If they insist, provide annotated solution with reflection questions.
 - **Stuck and frustrated** — Escalate hint tier immediately, validate the difficulty, offer to walk through together instead of asking questions.
 - **Incomplete problem description** — Ask for the specific missing pieces (constraints, examples, expected output).
+- **User pastes a complete solution** (from ChatGPT, editorial, etc.) — Do not validate. Ask: "Walk me through this line by line." If they can't explain, treat as a learning opportunity from Step 3.
+- **Learner proposes a fundamentally wrong approach** — Ask them to trace through a small example input. Let them discover the failure themselves. Provide a counterexample input if they don't see it after one trace.
 - **ML needs external references** — Use `references/ml-implementations.md`. For novel architectures, ask the user for the paper.
 - **User already knows the solution** — Offer routing menu:
   > **(a) Full mock interview** — quiz everything: reconstruction, edge cases, complexity, variations. *(→ Section 5B from R1)*
