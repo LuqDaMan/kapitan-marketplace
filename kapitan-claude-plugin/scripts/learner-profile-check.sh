@@ -25,8 +25,11 @@ if [ -z "$TRANSCRIPT" ] || [ ! -f "$TRANSCRIPT" ]; then
   exit 0
 fi
 
-# Not a leetcode session? Allow stop.
-if ! grep -q "leetcode-teacher" "$TRANSCRIPT" 2>/dev/null; then
+# Detect actual teaching — reference file reads only happen during active teaching,
+# not from the SessionStart hook passively loading the profile into context.
+REFS_READ=$(grep -E '"name"\s*:\s*"Read"' "$TRANSCRIPT" 2>/dev/null \
+  | grep -c 'leetcode-teacher/references/' 2>/dev/null)
+if [ "${REFS_READ:-0}" -eq 0 ]; then
   exit 0
 fi
 
