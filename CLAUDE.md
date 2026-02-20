@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-**kapitan-marketplace** is a Claude Code plugin marketplace that provides slash commands, agents, skills, hooks, and MCP server configurations. It's installed via the Claude Code marketplace system (`/plugin marketplace add` + `/plugin install`) and all components are auto-discovered at runtime.
+**ashford** is a Claude Code plugin marketplace that provides slash commands, agents, skills, hooks, and MCP server configurations. It's installed via the Claude Code marketplace system (`/plugin marketplace add` + `/plugin install`) and all components are auto-discovered at runtime.
 
 - **Author:** Luqman Nurhakim
 - **No build system** — all components are Markdown/JSON files auto-discovered by Claude Code. No compilation, bundling, or package management needed for the plugin itself.
@@ -66,6 +66,6 @@ Defined in `egg/.mcp.json`: context7 (npx), git (uvx), chrome-devtools (npx), ex
 
 ## Installation Model
 
-**Primary (Marketplace):** Users run `/plugin marketplace add luqmannurhakimbazman/kapitan-marketplace` then `/plugin install egg@kapitan-marketplace`. This delivers all components — commands, agents, skills, hooks, and MCP servers.
+**Primary (Marketplace):** Users run `/plugin marketplace add LuqDaMan/ashford` then `/plugin install egg@ashford`. This delivers all components — commands, agents, skills, hooks, and MCP servers.
 
-**Legacy (Submodule):** Adding the repo as a git submodule at `.claude-plugins/kapitan` only delivers MCP servers. Commands, agents, skills, and hooks are **not** discovered via submodules. Use the marketplace approach for full functionality.
+**Legacy (Submodule):** Adding the repo as a git submodule at `.claude-plugins/ashford` only delivers MCP servers. Commands, agents, skills, and hooks are **not** discovered via submodules. Use the marketplace approach for full functionality.

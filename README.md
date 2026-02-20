@@ -1,4 +1,4 @@
-# kapitan-marketplace
+# ashford
 
 A Claude Code plugin marketplace providing commands, agents, skills, hooks, and MCP server configurations.
 
@@ -21,8 +21,8 @@ A Claude Code plugin marketplace providing commands, agents, skills, hooks, and 
 ## Install
 
 ```bash
-/plugin marketplace add luqmannurhakimbazman/kapitan-marketplace
-/plugin install egg@kapitan-marketplace
+/plugin marketplace add LuqDaMan/ashford
+/plugin install egg@ashford
 ```
 
 Commands, agents, skills, hooks, and MCP servers are all available immediately.
@@ -41,7 +41,7 @@ GitLab requires `GITLAB_PERSONAL_ACCESS_TOKEN` in your environment.
 ## Structure
 
 ```
-kapitan-marketplace/
+ashford/
 ├── egg/
 │   ├── .claude-plugin/plugin.json
 │   ├── .mcp.json

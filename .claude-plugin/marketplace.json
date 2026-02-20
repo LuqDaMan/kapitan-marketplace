@@ -1,6 +1,6 @@
 {
   "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
-  "name": "kapitan-marketplace",
+  "name": "ashford",
   "description": "Claude Code plugin marketplace for development workflows",
   "owner": {
     "name": "Luqman Nurhakim"
