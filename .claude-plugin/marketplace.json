@@ -7,8 +7,8 @@
   },
   "plugins": [
     {
-      "name": "kapitan-claude-plugin",
-      "source": "./kapitan-claude-plugin",
+      "name": "egg",
+      "source": "./egg",
       "description": "Commands, agents, skills, hooks, and MCP servers for enhanced development workflows"
     }
   ]

@@ -22,7 +22,7 @@ A Claude Code plugin marketplace providing commands, agents, skills, hooks, and 
 
 ```bash
 /plugin marketplace add luqmannurhakimbazman/kapitan-marketplace
-/plugin install kapitan-claude-plugin@kapitan-marketplace
+/plugin install egg@kapitan-marketplace
 ```
 
 Commands, agents, skills, hooks, and MCP servers are all available immediately.
@@ -42,7 +42,7 @@ GitLab requires `GITLAB_PERSONAL_ACCESS_TOKEN` in your environment.
 
 ```
 kapitan-marketplace/
-├── kapitan-claude-plugin/
+├── egg/
 │   ├── .claude-plugin/plugin.json
 │   ├── .mcp.json
 │   ├── commands/          # /commit, /status

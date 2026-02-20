@@ -11,16 +11,16 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Architecture
 
-The plugin lives in `kapitan-claude-plugin/` which contains the `.claude-plugin/plugin.json` manifest. Claude Code discovers all components by convention:
+The plugin lives in `egg/` which contains the `.claude-plugin/plugin.json` manifest. Claude Code discovers all components by convention:
 
 | Component | Location | Format |
 |-----------|----------|--------|
-| Commands | `kapitan-claude-plugin/commands/*.md` | Markdown with YAML frontmatter |
-| Agents | `kapitan-claude-plugin/agents/*.md` | Markdown with YAML frontmatter |
-| Skills | `kapitan-claude-plugin/skills/*/SKILL.md` | Markdown with YAML frontmatter |
-| MCP Servers | `kapitan-claude-plugin/.mcp.json` | JSON config |
-| Hooks | `kapitan-claude-plugin/hooks/hooks.json` | JSON config |
-| Helper Scripts | `kapitan-claude-plugin/scripts/` | Shell scripts |
+| Commands | `egg/commands/*.md` | Markdown with YAML frontmatter |
+| Agents | `egg/agents/*.md` | Markdown with YAML frontmatter |
+| Skills | `egg/skills/*/SKILL.md` | Markdown with YAML frontmatter |
+| MCP Servers | `egg/.mcp.json` | JSON config |
+| Hooks | `egg/hooks/hooks.json` | JSON config |
+| Helper Scripts | `egg/scripts/` | Shell scripts |
 
 The top-level `.claude-plugin/marketplace.json` is the marketplace registry pointing to the plugin directory. The `templates/` directory has ready-to-copy `.mcp.json` configurations (personal, all).
 
@@ -62,10 +62,10 @@ All components are auto-discovered — create files in the right directory and t
 
 ## MCP Servers
 
-Defined in `kapitan-claude-plugin/.mcp.json`: context7 (npx), git (uvx), chrome-devtools (npx), exa (bash wrapper → hosted endpoint via mcp-remote). The exa wrapper script (`scripts/exa-mcp.sh`) expands `EXA_API_KEY` at runtime since the plugin system doesn't interpolate `${ENV_VAR}` in `.mcp.json` args. Two templates in `templates/`: `mcp-personal.json` (everything except gitlab) and `mcp-all.json` (everything including gitlab). Templates use direct mcp-remote URLs. Projects copy a template to their root `.mcp.json` and customize.
+Defined in `egg/.mcp.json`: context7 (npx), git (uvx), chrome-devtools (npx), exa (bash wrapper → hosted endpoint via mcp-remote). The exa wrapper script (`scripts/exa-mcp.sh`) expands `EXA_API_KEY` at runtime since the plugin system doesn't interpolate `${ENV_VAR}` in `.mcp.json` args. Two templates in `templates/`: `mcp-personal.json` (everything except gitlab) and `mcp-all.json` (everything including gitlab). Templates use direct mcp-remote URLs. Projects copy a template to their root `.mcp.json` and customize.
 
 ## Installation Model
 
-**Primary (Marketplace):** Users run `/plugin marketplace add luqmannurhakimbazman/kapitan-marketplace` then `/plugin install kapitan-claude-plugin@kapitan-marketplace`. This delivers all components — commands, agents, skills, hooks, and MCP servers.
+**Primary (Marketplace):** Users run `/plugin marketplace add luqmannurhakimbazman/kapitan-marketplace` then `/plugin install egg@kapitan-marketplace`. This delivers all components — commands, agents, skills, hooks, and MCP servers.
 
 **Legacy (Submodule):** Adding the repo as a git submodule at `.claude-plugins/kapitan` only delivers MCP servers. Commands, agents, skills, and hooks are **not** discovered via submodules. Use the marketplace approach for full functionality.

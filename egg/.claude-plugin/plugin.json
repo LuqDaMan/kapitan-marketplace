@@ -1,5 +1,5 @@
 {
-  "name": "kapitan-claude-plugin",
+  "name": "egg",
   "description": "A comprehensive Claude Code plugin with commands, agents, skills, hooks, and MCP servers",
   "author": {
     "name": "Luqman Nurhakim"
