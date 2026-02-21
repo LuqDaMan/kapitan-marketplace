@@ -19,6 +19,14 @@
             "command": "bash ${CLAUDE_PLUGIN_ROOT}/scripts/learner-profile-load.sh"
           }
         ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash ${CLAUDE_PLUGIN_ROOT}/scripts/markets-profile-load.sh"
+          }
+        ]
       }
     ],
     "PreCompact": [
@@ -29,6 +37,14 @@
             "command": "bash ${CLAUDE_PLUGIN_ROOT}/scripts/learner-session-snapshot.sh"
           }
         ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash ${CLAUDE_PLUGIN_ROOT}/scripts/markets-session-snapshot.sh"
+          }
+        ]
       }
     ],
     "Stop": [
@@ -37,6 +53,14 @@
           {
             "type": "command",
             "command": "bash ${CLAUDE_PLUGIN_ROOT}/scripts/learner-profile-check.sh"
+          }
+        ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash ${CLAUDE_PLUGIN_ROOT}/scripts/markets-profile-check.sh"
           }
         ]
       }
