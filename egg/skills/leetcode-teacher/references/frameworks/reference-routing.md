@@ -80,3 +80,5 @@ The single source of truth for technique → reference file mappings. Step 2B lo
 | **ML** | |
 | ML implementations (optimizers, layers, losses) | `references/ml/ml-implementations.md` |
 | ML special handling (Socratic questions, numerical walkthroughs) | `references/ml/ml-special-handling.md` |
+| **Libraries** | |
+| Pandas DataFrame operations (creation, filtering, groupby, merge, apply, cleaning, I/O) | `references/libraries/pandas-fundamentals.md` |
