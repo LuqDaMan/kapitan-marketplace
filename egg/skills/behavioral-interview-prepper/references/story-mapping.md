@@ -24,10 +24,10 @@ Apply these constraints when assigning stories to predicted questions:
 1. **Reuse cap**: Each story can serve up to 5 questions, reframed with different emphasis per question.
 2. **Hard ceiling**: No story should appear more than 5 times in the final answer bank.
 3. **Reframe requirement for uses 4-5**: Uses beyond the 3rd must shift to a **different trait cluster emphasis** than uses 1-3. This prevents the interviewer from hearing the same story with superficial rewording. The philosophy: 6-8 core stories should cover your full question set. Slight modifications in framing — not new stories — are how experienced candidates scale.
-3. **Recency bias**: Prioritize stories from the most recent and most relevant roles. Stories older than 5 years should only fill gaps.
-4. **Role relevance**: Stories from roles similar to the target role outrank stories from unrelated roles, even if the unrelated story is more recent.
-5. **Cluster balancing**: If a story maps to multiple clusters, assign it to the cluster with the fewest stories first. This prevents cluster starvation.
-6. **Uniqueness spread**: Across all primary clusters, aim for at least 2 distinct stories each. Avoid a single "hero story" carrying the entire bank.
+4. **Recency bias**: Prioritize stories from the most recent and most relevant roles. Stories older than 5 years should only fill gaps.
+5. **Role relevance**: Stories from roles similar to the target role outrank stories from unrelated roles, even if the unrelated story is more recent.
+6. **Cluster balancing**: If a story maps to multiple clusters, assign it to the cluster with the fewest stories first. This prevents cluster starvation.
+7. **Uniqueness spread**: Across all primary clusters, aim for at least 2 distinct stories each. Avoid a single "hero story" carrying the entire bank.
 
 ## Reframing Technique
 
@@ -90,5 +90,6 @@ Rules for the table:
 - **Source** must reference the exact resume bullet number or `candidate-context.md`.
 - **Trait Clusters** lists the clusters the story serves across all assigned questions.
 - **Questions Assigned** references question numbers from the predicted question list.
+- **Reframe Angle (uses 4-5)** is blank unless the story is assigned 4 or more questions. For uses 4-5, state which question number maps to which reframed trait cluster angle.
 - **Gap?** is blank if the story is a direct match. If it required gap handling, note which strategy was used.
 - Sort by question coverage descending (stories covering the most questions first).

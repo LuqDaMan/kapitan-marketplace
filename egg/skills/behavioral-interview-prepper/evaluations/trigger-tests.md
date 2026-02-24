@@ -15,6 +15,7 @@
 | "I just finished tailoring my resume, now prep me for the interview" | Post-resume-builder context |
 | "behavioral prep for Jane Street" | Exact trigger phrase + finance company |
 | "help me prep questions to ask my interviewer at Google" | Questions-for-interviewer feature |
+| "walk me through your resume prep" | Resume walkthrough trigger phrasing |
 | "practice my resume walkthrough" | Resume walkthrough feature |
 | "help me with my SOAR answers for the Amazon interview" | SOAR format trigger |
 
