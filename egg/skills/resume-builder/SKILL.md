@@ -1,6 +1,6 @@
 ---
 name: resume-builder
-description: This skill should be used when the user wants to tailor a resume for a specific job description, or write a cover letter for a role. Trigger phrases include "tailor resume", "tailor my resume", "optimize resume for JD", "build resume for", "target job description", "customize resume for", "adapt resume to job", "resume for this role", "refactor resume", "update resume for", "match resume to JD", "resume for this position", "write cover letter", "cover letter for", "tailor cover letter", "draft cover letter", or when a user pastes a job description alongside their resume. It performs keyword extraction, gap analysis, and produces a tailored LaTeX resume with detailed analysis notes. It can also generate a tailored cover letter.
+description: This skill should be used when the user wants to tailor a resume for a specific job description, or write a cover letter for a role. Trigger phrases include "tailor resume", "optimize resume for JD", "build resume for", "target job description", "customize resume for", "resume for this role", "refactor resume", "update resume for", "match resume to JD", "write cover letter", "cover letter for", "draft cover letter", or when a user pastes a job description alongside their resume. It performs keyword extraction, gap analysis, and produces a tailored LaTeX resume with detailed analysis notes. It can also generate a tailored cover letter.
 ---
 
 # Resume Builder
@@ -9,13 +9,14 @@ Tailor the master resume (`hojicha/resume.tex`) for a specific job description. 
 
 ## Critical Rules
 
-1. **NEVER fabricate experiences, skills, or achievements.** Only use content from the master resume. You may rephrase, reorder, and emphasize — never invent.
+1. **NEVER fabricate experiences, skills, or achievements.** Only use content from the master resume and the `candidate-context.md` file. You may rephrase, reorder, and emphasize — never invent.
 2. **Preserve the `fed-res.cls` document class.** Do not modify `\documentclass[letterpaper,12pt]{fed-res}` or add packages. Copy `hojicha/fed-res.cls` into the output directory. See `references/latex-commands.md` for available commands.
 3. **Maintain ATS compatibility.** No graphics, tables outside the cls structure, or custom fonts. The cls already sets `\pdfgentounicode=1`.
 4. **Keep to one page — less is more.** The resume must fit a single letter-sized page. Highlight only your strongest 2-3 bullets per role — cut average achievements. Fewer strong bullets beat many mediocre ones. If a bullet doesn't directly support the target JD, consider removing it.
 5. **Use XYZ bullet format.** Every experience bullet should follow "Accomplished [X] as measured by [Y], by doing [Z]." See `references/xyz-formula.md`.
 6. **Strategic uncommenting.** The master resume contains commented-out sections (LSE, SUSS, Arcane, KlimaDAO, SuperAI, Ripple, CFA). Uncomment entries that are relevant to the target role.
 7. **Strategic commenting.** Comment out entries that are irrelevant or weaken the application for the target role.
+8. **Never generate generic content — ask instead.** If you would produce a vague bullet, generic summary, or placeholder content, STOP and ask the candidate a probing question to get real specifics. See `references/candidate-discovery.md` for anti-generic detection heuristics and probing techniques. Every output must reflect the candidate's actual experience.
 
 ---
 
@@ -29,16 +30,29 @@ Read the master resume and the job description provided by the user.
 Required:
 - Job description (pasted text, file, or URL — if a URL is provided, use a web-fetching tool to retrieve the JD content)
 - Master resume: hojicha/resume.tex
+- Candidate context: hojicha/candidate-context.md (supplementary experiences, projects, and skills not yet in the master resume — use as an additional source alongside the master resume per Critical Rule 1)
 
 Optional (ask if not provided):
 - Company name (for output directory naming)
 - Role title (for output directory naming)
 - Any special instructions (e.g., "emphasize ML experience")
-
-Contact info note: If the role is location-sensitive or requires phone screening, ensure the resume header includes a phone number and city/country alongside email, LinkedIn, and GitHub.
 ```
 
+**Contact info note:** If the role is location-sensitive or requires phone screening, ensure the resume header includes a phone number and city/country alongside email, LinkedIn, and GitHub.
+
 Derive `<company>` and `<role>` from the JD for the output directory name. Use lowercase, hyphenated slugs (e.g., `kronos-research-ml-researcher-resume`).
+
+### Step 1.5: Discovery Interview
+
+Before analyzing keywords, probe the candidate for context that their materials don't yet cover. This step ensures the rest of the workflow operates on rich, authentic material — not thin bullet points.
+
+1. **Cross-reference JD against candidate materials.** Read the JD requirements, then scan `candidate-context.md` and the master resume. Identify 3-5 areas where the JD demands depth that current materials don't address (e.g., the JD wants "experience navigating regulatory ambiguity" but nothing in the candidate's materials touches this).
+2. **Ask targeted probing questions.** For each gap, ask one question using the relevant category from `references/candidate-discovery.md`. Ask one question at a time — wait for the candidate's response before asking the next.
+3. **Follow up on vague answers.** If the candidate's response is generic or abstract, ask a more specific follow-up per the probing technique guidelines in `references/candidate-discovery.md`. Maximum two follow-ups per topic.
+4. **Persist discoveries.** Append all new information to `hojicha/candidate-context.md` using the persistence format in `references/candidate-discovery.md`.
+5. **Proceed with enriched context.** Continue to Step 2 with the updated candidate materials.
+
+**Skip conditions:** If `candidate-context.md` is already rich and covers the JD requirements well, you may skip this step — but note in `notes.md` that discovery was skipped and why.
 
 ### Step 2: Keyword Analysis
 
@@ -96,7 +110,7 @@ Map each JD requirement to existing resume content. Identify:
 
 - **Strong matches**: Resume already demonstrates this clearly
 - **Reframeable**: Experience exists but needs rephrasing to highlight relevance
-- **Gaps**: No matching experience (document honestly in notes.md — do NOT fabricate)
+- **Gaps**: No matching experience — but before marking a gap, **ask the candidate first**: "Do you have any experience related to [requirement] that isn't on your resume? Even from side projects, school, or personal life?" Only mark as a true gap if the candidate confirms they don't have relevant experience. Persist any new discoveries to `candidate-context.md` per `references/candidate-discovery.md`. Document all gaps honestly in notes.md — do NOT fabricate.
 
 ### Step 6: Avenues to Strengthen Application
 
@@ -134,6 +148,8 @@ Priority order for keyword placement (optimized for human readers — recruiters
 2. Most recent experience section
 3. Projects/Leadership section
 4. Skills section (highest ATS hit rate — see `references/ats-keywords.md` for ATS-specific priority)
+
+**Inline probing:** When rewriting a bullet and the result triggers anti-generic heuristics from `references/candidate-discovery.md` (e.g., the action could apply to anyone, or specifics are missing), pause and ask the candidate: "This bullet mentions [vague action]. What specifically did you do? What was the measurable outcome? What would someone else in your position NOT have done?" Persist new specifics to `candidate-context.md` and rewrite the bullet with the real details.
 
 ### Step 8: Strategic Uncommenting & Commenting
 
