@@ -21,8 +21,9 @@ Tag format per story:
 
 Apply these constraints when assigning stories to predicted questions:
 
-1. **Reuse cap**: Each story can serve 2-3 questions max, reframed with different emphasis per question.
-2. **Hard ceiling**: No story should appear more than 3 times in the final answer bank.
+1. **Reuse cap**: Each story can serve up to 5 questions, reframed with different emphasis per question.
+2. **Hard ceiling**: No story should appear more than 5 times in the final answer bank.
+3. **Reframe requirement for uses 4-5**: Uses beyond the 3rd must shift to a **different trait cluster emphasis** than uses 1-3. This prevents the interviewer from hearing the same story with superficial rewording. The philosophy: 6-8 core stories should cover your full question set. Slight modifications in framing — not new stories — are how experienced candidates scale.
 3. **Recency bias**: Prioritize stories from the most recent and most relevant roles. Stories older than 5 years should only fill gaps.
 4. **Role relevance**: Stories from roles similar to the target role outrank stories from unrelated roles, even if the unrelated story is more recent.
 5. **Cluster balancing**: If a story maps to multiple clusters, assign it to the cluster with the fewest stories first. This prevents cluster starvation.
@@ -76,12 +77,12 @@ Flag every gap in the story bank table so the candidate knows which answers need
 Output the final mapping as a table. This is the deliverable for the story-mapping step.
 
 ```markdown
-| # | Story | Source | Trait Clusters | Questions Assigned | Gap? |
-|---|---|---|---|---|---|
-| S1 | ML pipeline migration at Company X | resume bullet #3 | Technical Rigor, Leadership & Ownership | Q1, Q4, Q7 | — |
-| S2 | Cross-team API redesign | resume bullet #7 | Collaboration, Communication | Q2, Q5 | — |
-| S3 | Onboarding mentorship program | candidate-context.md | Growth Mindset | Q8 | — |
-| S4 | — | — | Resilience & Ambiguity | Q3 | GAP: adjacent experience only |
+| # | Story | Source | Trait Clusters | Questions Assigned | Reframe Angle (uses 4-5) | Gap? |
+|---|---|---|---|---|---|---|
+| S1 | ML pipeline migration at Company X | resume bullet #3 | Technical Rigor, Leadership & Ownership, Resilience | Q1, Q4, Q7, Q11, Q13 | Q11: Collaboration (cross-team coordination), Q13: Resilience (no-documentation obstacle) | — |
+| S2 | Cross-team API redesign | resume bullet #7 | Collaboration, Communication | Q2, Q5 | — | — |
+| S3 | Onboarding mentorship program | candidate-context.md | Growth Mindset | Q8 | — | — |
+| S4 | — | — | Resilience & Ambiguity | Q3 | — | GAP: adjacent experience only |
 ```
 
 Rules for the table:
