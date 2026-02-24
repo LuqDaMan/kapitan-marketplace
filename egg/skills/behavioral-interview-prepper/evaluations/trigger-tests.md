@@ -14,6 +14,9 @@
 | "help me with STAR method answers" | Trigger phrase "STAR method answers" |
 | "I just finished tailoring my resume, now prep me for the interview" | Post-resume-builder context |
 | "behavioral prep for Jane Street" | Exact trigger phrase + finance company |
+| "help me prep questions to ask my interviewer at Google" | Questions-for-interviewer feature |
+| "practice my resume walkthrough" | Resume walkthrough feature |
+| "help me with my SOAR answers for the Amazon interview" | SOAR format trigger |
 
 ## Should NOT Trigger
 
@@ -33,3 +36,4 @@
 | "prep behavioral" (no resume-builder output exists) | Trigger skill, but Step 1 should detect missing files and prompt user to run resume-builder first |
 | "behavioral prep for Goldman Sachs trading" | Trigger skill + finance layer (Step 6) should activate |
 | "prep behavioral for Anthropic" | Trigger skill, no finance layer |
+| "prep my resume walkthrough for Goldman Sachs trading" | Trigger skill + resume walkthrough + finance layer should both activate |
