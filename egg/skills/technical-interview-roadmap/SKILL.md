@@ -1,15 +1,15 @@
 ---
 name: technical-interview-roadmap
-description: This skill should be used when the user wants a technical interview preparation roadmap, coding interview study plan, or DSA practice plan tailored to a specific company and role. Trigger phrases include "technical interview roadmap", "coding interview prep for", "DSA roadmap for", "DSA study plan", "leetcode prep for", "what problems should I practice for", "interview study plan", "prep me for the technical rounds", "technical prep for", "what should I study for", "coding prep plan", or post-resume-builder requests for technical interview preparation.
+description: This skill should be used when the user wants a technical interview preparation roadmap, coding interview study plan, or DSA practice plan tailored to a specific company and role. Trigger phrases include "technical interview roadmap", "coding interview prep for", "DSA roadmap for", "DSA study plan", "leetcode prep for", "what problems should I practice for", "interview study plan", "prep me for the technical rounds", "technical prep for", "what should I study for", "coding prep plan", "roadmap from this JD", "technical prep from job posting", "DSA roadmap from JD URL", "prep me for this role [URL]", or requests for technical interview preparation with a JD URL or pasted job description.
 ---
 
 # Technical Interview Roadmap
 
-Generate a company-specific technical interview study plan from resume-builder output. Reads JD analysis, researches the company's engineering domain, consults the leetcode-teacher learner profile, and outputs a curated LeetCode problem list with phased study timeline. Output goes to `hojicha/<company>-<role>-resume/technical-roadmap.md`.
+Generate a company-specific technical interview study plan from a JD URL or pasted job description. Extracts DSA-relevant signals directly from the JD, researches the company's engineering domain, consults the leetcode-teacher learner profile, and outputs a curated LeetCode problem list with phased study timeline. Output goes to `hojicha/<company>-<role>-resume/technical-roadmap.md`.
 
 ## Critical Rules
 
-1. **Chain from resume-builder.** Read `notes.md` from the resume-builder output directory. Do not re-parse the JD from scratch. If no output exists, prompt the user to run resume-builder first.
+1. **Require JD input.** The user must provide a JD URL or paste JD text. The skill extracts its own DSA-focused signals directly from the JD — it does not depend on resume-builder output. If no JD is provided, prompt the user to provide a URL or paste the JD text.
 2. **No paywalled sources.** Only use public engineering blogs, GitHub, official company pages, YouTube tech talks. Hard ban on Glassdoor, Blind, LeetCode Discuss company tags, or any paywalled content.
 3. **Cite all research.** Every company engineering claim needs a source URL in the appendix. No unsourced assertions about tech stack or interview process.
 4. **Align with leetcode-teacher taxonomy.** All pattern names, classifications, and difficulty labels must match `references/frameworks/problem-patterns.md` from the leetcode-teacher skill. Use the exact pattern names: Two Pointers, Sliding Window, Binary Search, Dynamic Programming, DFS/BFS, Backtracking, Greedy, Hash Table, Heap / Priority Queue, Union-Find.
@@ -18,6 +18,7 @@ Generate a company-specific technical interview study plan from resume-builder o
 7. **Every problem needs a "Why."** Connect each problem to the company domain, role requirements, or a learner weakness. No generic filler entries.
 8. **No system design content.** This roadmap covers DSA/coding problems only. Explicitly disclaim system design in the output.
 9. **Difficulty matches role level.** Junior/entry = Easy-Medium focus. Mid = Medium focus. Senior = Medium-Hard focus.
+10. **URL fetch tool priority.** When fetching a JD URL, use Exa `crawling_exa` as primary. Fall back to `WebFetch` if Exa is unavailable. If neither works, ask the user to paste the JD text directly.
 
 ---
 
@@ -25,34 +26,72 @@ Generate a company-specific technical interview study plan from resume-builder o
 
 ### Step 1: Parse Inputs
 
-Read from the existing resume-builder output directory:
+The user provides a JD URL or pastes JD text. This is the only JD input — the skill does not read `notes.md` or any resume-builder output for JD analysis.
 
+**If JD URL or pasted text is provided:** Proceed to Step 1b.
+
+**If neither is provided:** Prompt the user to either:
+1. Provide a JD URL
+2. Paste the JD text directly
+
+Also read these optional files if they exist:
 ```
-Required:
-- hojicha/<company>-<role>-resume/notes.md (JD summary, keyword analysis, gap analysis)
-
 Optional:
 - ~/.claude/leetcode-teacher-profile.md (learner profile for calibration)
-- hojicha/<company>-<role>-resume/resume.tex (tailored resume for context)
 - hojicha/candidate-context.md (discovery interview context — technical background, project details)
 ```
 
-Derive the company name, role title, and domain from the JD summary in `notes.md`.
+### Step 1b: DSA-Focused JD Extraction
 
-**If `notes.md` does not exist:** Prompt the user to run the `resume-builder` skill first with the target JD. This skill requires resume-builder output — it does not accept raw JD/resume input directly.
+Runs every time — this is the core input processing step.
 
-**If the user provides a company and role but has no resume-builder output:** Still prompt for resume-builder first. The JD keyword analysis is essential for accurate signal extraction.
+#### 1b.1: Fetch JD Content
+
+- **If URL:** Use Exa `crawling_exa` (primary) or `WebFetch` (fallback) to retrieve the page content. Extract the job description text from the fetched content — strip navigation, footers, and unrelated page elements.
+- **If pasted text:** Use directly.
+- **If fetch fails:** Ask the user to paste the JD text instead.
+
+#### 1b.2: Extract DSA-Relevant Signals
+
+Parse the JD content for:
+
+1. **Hard skills** — programming languages, frameworks, tools, platforms (e.g., Python, PyTorch, AWS, Kubernetes). These map to algorithm patterns in Step 2.
+2. **Domain keywords** — industry and problem domain terms (e.g., recommendation systems, real-time ML, distributed computing). These map to problem types in Step 2.
+3. **Role level** — infer junior/mid/senior from JD language using the same heuristics as Step 2 item 4 (years of experience, "lead", "architect", "entry-level", "associate").
+4. **Company name and role title** — extract for output directory naming and company research (Step 3). If ambiguous, ask the user.
+
+#### 1b.3: Write `jd-signals.md`
+
+Create the output directory `hojicha/<company>-<role>-resume/` if it does not exist. Write extracted signals to `hojicha/<company>-<role>-resume/jd-signals.md`:
+
+```markdown
+# JD Signals: <Company> — <Role>
+
+> Source: [URL or "pasted text"]
+> Extracted: <date>
+
+## Hard Skills
+- <comma-separated list>
+
+## Domain Keywords
+- <comma-separated list>
+
+## Role Level
+- **Detected:** <Junior/Mid/Senior> (<supporting JD evidence>)
+
+## Raw JD Text
+<full JD text preserved for reference>
+```
 
 ### Step 2: Extract Technical Signals from JD
 
-Parse the Keyword Analysis and Gap Analysis sections from `notes.md`. If `hojicha/candidate-context.md` exists, also scan it for additional technical signals (languages, frameworks, project domains) that may inform pattern prioritization.
+Parse the Hard Skills and Domain Keywords sections from `jd-signals.md`. If `hojicha/candidate-context.md` exists, also scan it for additional technical signals (languages, frameworks, project domains) that may inform pattern prioritization.
 
-Focus on what JD keywords *imply for coding interviews*, not just resume optimization:
+Focus on what JD keywords *imply for coding interviews*:
 
 1. **Hard skills → DSA topics.** Map technical requirements to algorithm patterns using `references/jd-signal-mapping.md`. Example: "distributed systems" → Graph algorithms, BFS/DFS; "real-time processing" → Sliding Window, Heap.
 2. **Domain keywords → problem types.** Extract domain-specific signals. Example: "recommendation engine" → Hash Table, Dynamic Programming; "trading systems" → Greedy, Binary Search.
-3. **Gap analysis → study priorities.** Gaps from the resume analysis indicate areas the candidate needs to demonstrate competence — these should be weighted higher in the roadmap.
-4. **Role level detection.** Infer junior/mid/senior from JD language (years of experience, "lead", "architect", "entry-level") for difficulty calibration.
+3. **Role level detection.** Use the role level from `jd-signals.md` for difficulty calibration. Infer junior/mid/senior from JD language (years of experience, "lead", "architect", "entry-level").
 
 ### Step 3: Company Engineering Research
 
@@ -178,9 +217,8 @@ Write `technical-roadmap.md` to `hojicha/<company>-<role>-resume/`:
 
 ```
 hojicha/<company>-<role>-resume/
-  notes.md               # Already exists (from resume-builder)
-  resume.tex             # Already exists (from resume-builder)
-  technical-roadmap.md   # Generated by this skill
+  jd-signals.md          # Generated by Step 1b (DSA-focused JD extraction)
+  technical-roadmap.md   # Generated by Step 8
 ```
 
 ---
@@ -198,6 +236,7 @@ The generated `technical-roadmap.md` should follow this structure:
 
 | Dimension | Finding | Source |
 |-----------|---------|--------|
+| JD Source | [URL / pasted text] | — |
 | Primary Languages | ... | [URL] |
 | Core Infrastructure | ... | [URL] |
 | Key Problem Domains | ... | [URL] |
