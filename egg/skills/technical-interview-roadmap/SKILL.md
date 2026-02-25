@@ -1,6 +1,6 @@
 ---
 name: technical-interview-roadmap
-description: This skill should be used when the user wants a technical interview preparation roadmap, coding interview study plan, or DSA practice plan tailored to a specific company and role. Trigger phrases include "technical interview roadmap", "coding interview prep for", "DSA roadmap for", "DSA study plan", "leetcode prep for", "what problems should I practice for", "interview study plan", "prep me for the technical rounds", "technical prep for", "what should I study for", "coding prep plan", or post-resume-builder requests for technical interview preparation. It chains off resume-builder output (notes.md) to produce a curated LeetCode problem list with phased study timeline aligned to the leetcode-teacher taxonomy.
+description: This skill should be used when the user wants a technical interview preparation roadmap, coding interview study plan, or DSA practice plan tailored to a specific company and role. Trigger phrases include "technical interview roadmap", "coding interview prep for", "DSA roadmap for", "DSA study plan", "leetcode prep for", "what problems should I practice for", "interview study plan", "prep me for the technical rounds", "technical prep for", "what should I study for", "coding prep plan", or post-resume-builder requests for technical interview preparation.
 ---
 
 # Technical Interview Roadmap
@@ -110,19 +110,42 @@ Pattern names MUST match the leetcode-teacher taxonomy. See the Quick Reference 
 
 ### Step 6: Curate Problem List
 
-Select 15-25 specific LeetCode problems from `references/curated-problem-bank.md`.
+#### 6a: Company Frequency Enrichment
 
-**Selection criteria:**
-1. **Pattern alignment** — problem exercises a Tier 1 or Tier 2 pattern from the roadmap
-2. **Difficulty progression** — Easy → Medium → Hard within each topic area
-3. **Company domain relevance** — prefer problems with domain tags matching the company's engineering focus
-4. **Learner weakness targeting** — include problems that exercise tracked weaknesses from the learner profile
-5. **No duplicates** — check Session History and exclude problems the learner has already practiced
+Before selecting from the curated bank, attempt to fetch company-specific problem frequency data:
+
+1. **Normalize company name to GitHub slug.** Use `references/company-slug-map.md` to look up the slug (e.g., "Goldman Sachs" → `goldman-sachs`, "Meta" → `meta`). If the company isn't in the map, derive the slug by lowercasing and replacing spaces/special chars with hyphens.
+2. **Fetch recent problem data.** Use `WebFetch` to retrieve:
+   ```
+   https://raw.githubusercontent.com/snehasishroy/leetcode-companywise-interview-questions/master/<slug>/thirty-days.csv
+   ```
+   If the fetch fails or returns empty, try `six-months.csv` as fallback. If that also fails, skip enrichment entirely and proceed to 6b with the curated bank only.
+3. **Parse the CSV.** The CSV has columns `ID,URL,Title,Difficulty,Acceptance %,Frequency %`. Extract `(ID, Title, Difficulty, Frequency %)` from each row, skip the header. Sort by `Frequency %` descending so the most-asked problems are considered first.
+4. **Cross-reference with curated bank.** For each fetched problem, check if it exists in `references/curated-problem-bank.md` by LeetCode number:
+   - **Match found:** Tag the problem with its pattern from the curated bank + the company frequency%.
+   - **No match:** Tag as `company-frequent (untagged)` with its difficulty and frequency%.
+5. **Note enrichment status in output.** If enrichment succeeded, add a line to the Company Engineering Profile section: `Company problem frequency data: sourced from public GitHub dataset (last 30 days / last 6 months)`. If enrichment failed, note: `Company problem frequency data: not available — using curated bank and archetype-based selection only`.
+
+#### 6b: Problem Selection
+
+Select 15-25 specific LeetCode problems. Use both `references/curated-problem-bank.md` and the enrichment data (if available) from Step 6a.
+
+**Selection priority (highest → lowest):**
+1. **Company-frequent + pattern-aligned** — problems from the company's frequency list that also match a Tier 1/2 pattern from the roadmap. These are the highest-signal picks.
+2. **Pattern-aligned from curated bank** — problems from the curated bank matching Tier 1/2 patterns, even if not in the company frequency list.
+3. **Company-frequent but untagged** — high-frequency company problems (≥50%) not in the curated bank. Include 2-3 of these max, noting "frequently asked at <company>, verify pattern alignment."
+
+**Additional selection criteria (applied within each priority level):**
+- **Difficulty progression** — Easy → Medium → Hard within each topic area
+- **Company domain relevance** — prefer problems with domain tags matching the company's engineering focus
+- **Learner weakness targeting** — include problems that exercise tracked weaknesses from the learner profile
+- **No duplicates** — check Session History and exclude problems the learner has already practiced
 
 **Every problem gets:**
 - LeetCode number and name
 - Difficulty (Easy/Medium/Hard)
-- Primary pattern
+- Primary pattern (or "untagged" for company-frequent problems not in the curated bank)
+- Company frequency% (if available from enrichment)
 - A 1-line "Why" rationale connecting it to the company, role, or learner weakness
 
 ### Step 7: Generate Study Plan
@@ -231,27 +254,27 @@ The generated `technical-roadmap.md` should follow this structure:
 
 *Use leetcode-teacher Learning Mode for new patterns.*
 
-| # | Problem | Difficulty | Pattern | Why |
-|---|---------|-----------|---------|-----|
-| 1 | [Name] (LC #) | Easy | Hash Table | [1-line rationale] |
-| 2 | [Name] (LC #) | Medium | Two Pointers | [1-line rationale] |
-| ... | ... | ... | ... | ... |
+| # | Problem | Difficulty | Pattern | Freq | Why |
+|---|---------|-----------|---------|------|-----|
+| 1 | [Name] (LC #) | Easy | Hash Table | 75% | [1-line rationale] |
+| 2 | [Name] (LC #) | Medium | Two Pointers | — | [1-line rationale] |
+| ... | ... | ... | ... | ... | ... |
 
 ### Phase 2: Core Depth (~[N] days)
 
 *Use leetcode-teacher Learning Mode for new problems. Recall Mode for Phase 1 revisits.*
 
-| # | Problem | Difficulty | Pattern | Why |
-|---|---------|-----------|---------|-----|
-| ... | ... | ... | ... | ... |
+| # | Problem | Difficulty | Pattern | Freq | Why |
+|---|---------|-----------|---------|------|-----|
+| ... | ... | ... | ... | ... | ... |
 
 ### Phase 3: Edge Sharpening (~[N] days)
 
 *Use leetcode-teacher Recall Mode for revisits. Focus on timed practice.*
 
-| # | Problem | Difficulty | Pattern | Why |
-|---|---------|-----------|---------|-----|
-| ... | ... | ... | ... | ... |
+| # | Problem | Difficulty | Pattern | Freq | Why |
+|---|---------|-----------|---------|------|-----|
+| ... | ... | ... | ... | ... | ... |
 
 ## Study Timeline
 
