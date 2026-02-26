@@ -1,6 +1,5 @@
 ---
 description: Scan Gmail for job application updates and sync to Job Tracker sheet
-allowed-tools: mcp__workspace__gmail.search, mcp__workspace__gmail.get, mcp__google-sheets__get_sheet_data, mcp__google-sheets__update_cells, mcp__google-sheets__add_rows, mcp__google-sheets__list_spreadsheets, mcp__google-sheets__find_in_spreadsheet
 argument-hint: [days] (default: 7)
 ---
 
@@ -16,7 +15,7 @@ Use `$ARGUMENTS` as the number of days to look back. Default to 7 if not provide
 
 ### 2. Search Gmail
 
-Use `gmail.search` with a query targeting job-related emails:
+Use the Gmail MCP's search tool with a query targeting job-related emails:
 
 ```
 to:lluqmannurhakim@gmail.com (subject:application OR subject:interview OR subject:offer OR subject:assessment OR subject:"online assessment" OR subject:"phone screen" OR subject:"coding challenge" OR subject:"not moving forward" OR subject:congratulations OR from:greenhouse.io OR from:lever.co OR from:ashbyhq.com OR from:myworkdayjobs.com OR from:icims.com OR from:smartrecruiters.com) newer_than:${days}d
@@ -24,7 +23,7 @@ to:lluqmannurhakim@gmail.com (subject:application OR subject:interview OR subjec
 
 ### 3. Read Matched Emails
 
-For each search result, use `gmail.get` to retrieve the full email content.
+For each search result, use the Gmail MCP's read/get tool to retrieve the full email content.
 
 ### 4. Read Current Sheet
 

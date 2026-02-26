@@ -1,7 +1,7 @@
 {
-  "workspace": {
-    "command": "npx",
-    "args": ["-y", "gemini-workspace-server"]
+  "gmail": {
+    "type": "http",
+    "url": "https://gmail.mcp.claude.com/mcp"
   },
   "google-sheets": {
     "command": "uvx",
