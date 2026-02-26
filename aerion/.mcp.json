@@ -4,15 +4,9 @@
     "url": "https://gmail.mcp.claude.com/mcp"
   },
   "google-sheets": {
-    "command": "uvx",
+    "command": "bash",
     "args": [
-      "mcp-google-sheets@latest",
-      "--include-tools",
-      "get_sheet_data,update_cells,add_rows,list_spreadsheets,find_in_spreadsheet"
-    ],
-    "env": {
-      "SERVICE_ACCOUNT_PATH": "${GOOGLE_SERVICE_ACCOUNT_PATH}",
-      "DRIVE_FOLDER_ID": "${HOJICHA_FOLDER_ID}"
-    }
+      "${CLAUDE_PLUGIN_ROOT}/aerion/scripts/google-sheets-mcp.sh"
+    ]
   }
 }
