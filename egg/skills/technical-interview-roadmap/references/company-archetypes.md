@@ -2,6 +2,8 @@
 
 Interview patterns by company type. Use as a proxy when company-specific research (Step 3) yields thin results. Select the best-fit archetype based on available signals.
 
+> **Key principle:** Companies don't pick interview questions at random. Each pattern in the tables below is tested because it maps to a real engineering challenge the company's engineers face daily. The "Why They Test This" column explains the connection — use it to inform the "Why" rationale for every problem in the roadmap.
+
 ---
 
 ## FAANG / Big Tech
@@ -16,18 +18,18 @@ Interview patterns by company type. Use as a proxy when company-specific researc
 
 **DSA Focus:**
 
-| Pattern | Weight | Notes |
-|---------|--------|-------|
-| Dynamic Programming | Very High | Multi-dimensional DP, state optimization |
-| DFS/BFS | Very High | Tree and graph traversal, connected components |
-| Hash Table | High | Expected as fundamental building block |
-| Two Pointers | High | Array and string manipulation |
-| Sliding Window | High | Substring and subarray problems |
-| Binary Search | High | Classic and "search on answer" variants |
-| Backtracking | Medium | Permutations, combinations, constraint satisfaction |
-| Greedy | Medium | Interval problems, optimization |
-| Heap / Priority Queue | Medium | Kth element, merge K sorted, streaming |
-| Union-Find | Low | Occasionally for graph connectivity problems |
+| Pattern | Weight | Why They Test This |
+|---------|--------|--------------------|
+| Dynamic Programming | Very High | Ads ranking, content recommendation, and cost optimization all require optimal substructure reasoning |
+| DFS/BFS | Very High | Social graphs, file system traversal, dependency resolution are daily engineering problems at scale |
+| Hash Table | High | Caching, deduplication, and fast lookup underpin virtually every service at billion-user scale |
+| Two Pointers | High | Feed merging, string processing, and diff computation in large-scale data pipelines |
+| Sliding Window | High | Real-time metrics dashboards, rate limiting, and streaming analytics across services |
+| Binary Search | High | Search ranking, configuration lookups, and A/B test threshold optimization |
+| Backtracking | Medium | Permission systems, query planners, and configuration space exploration |
+| Greedy | Medium | Task scheduling, resource allocation across data centers, interval-based capacity planning |
+| Heap / Priority Queue | Medium | News feed ranking, notification prioritization, merge of distributed sorted streams |
+| Union-Find | Low | Network partition detection, account merging across services |
 
 **Difficulty Distribution:** 30% Medium, 60% Medium-Hard, 10% Hard
 
@@ -52,17 +54,17 @@ Interview patterns by company type. Use as a proxy when company-specific researc
 
 **DSA Focus:**
 
-| Pattern | Weight | Notes |
-|---------|--------|-------|
-| Dynamic Programming | Very High | Optimal strategies, game theory, sequence optimization |
-| Binary Search | Very High | Precision search, numerical methods, bisection |
-| Heap / Priority Queue | High | Order matching, streaming problems |
-| Hash Table | High | Fast lookup, caching patterns |
-| Greedy | High | Optimization under constraints, scheduling |
-| Two Pointers | Medium | Pair finding, sorted array operations |
-| Sliding Window | Medium | Time-series windowing, streaming statistics |
-| DFS/BFS | Medium | Graph problems when they appear |
-| Backtracking | Low | Constraint satisfaction variants |
+| Pattern | Weight | Why They Test This |
+|---------|--------|--------------------|
+| Dynamic Programming | Very High | Optimal execution algorithms, options pricing (binomial trees), and portfolio allocation are DP problems |
+| Binary Search | Very High | Order book price lookups, bisection for numerical pricing models, binary search on answer for threshold optimization |
+| Heap / Priority Queue | High | Order matching engines rank orders by price-time priority; streaming top-K for real-time P&L monitoring |
+| Hash Table | High | Symbol-to-position mapping, real-time cache for market data, O(1) lookups critical at nanosecond scale |
+| Greedy | High | Trade scheduling under constraints, greedy execution strategies to minimize market impact |
+| Two Pointers | Medium | Time-series pair analysis, sorted order book scanning, merge operations on tick data |
+| Sliding Window | Medium | Moving average computation (VWAP, TWAP), rolling volatility windows, signal detection |
+| DFS/BFS | Medium | Cross-asset dependency graphs, risk exposure propagation through correlated instruments |
+| Backtracking | Low | Strategy parameter space exploration |
 | Union-Find | Low | Rarely tested |
 
 **Difficulty Distribution:** 10% Medium, 50% Medium-Hard, 40% Hard
@@ -87,18 +89,18 @@ Interview patterns by company type. Use as a proxy when company-specific researc
 
 **DSA Focus:**
 
-| Pattern | Weight | Notes |
-|---------|--------|-------|
-| Dynamic Programming | High | Sequence problems, optimization (connects to ML optimization) |
-| DFS/BFS | High | Graph traversal, tree operations (computation graphs) |
-| Hash Table | High | Memoization, feature hashing, lookup |
-| Binary Search | Medium | Hyperparameter search analogy, threshold problems |
-| Sliding Window | Medium | Sequence processing, windowed features |
-| Heap / Priority Queue | Medium | Beam search, top-K, nearest neighbor |
-| Two Pointers | Medium | Array manipulation, merge operations |
-| Greedy | Low-Medium | Greedy selection, scheduling |
-| Backtracking | Low | Search problems, feature selection |
-| Union-Find | Low | Clustering-related problems |
+| Pattern | Weight | Why They Test This |
+|---------|--------|--------------------|
+| Dynamic Programming | High | Training loop optimization, sequence alignment (Viterbi), loss landscape navigation are DP-structured |
+| DFS/BFS | High | Computation graph traversal (backprop), model architecture search, dependency ordering in training pipelines |
+| Hash Table | High | Embedding table lookups, feature hashing, memoization in recursive model evaluation |
+| Binary Search | Medium | Hyperparameter tuning (binary search on learning rate), threshold calibration for model confidence |
+| Sliding Window | Medium | Context window processing in transformers, streaming inference, windowed feature extraction |
+| Heap / Priority Queue | Medium | Beam search decoding, top-K token selection, nearest neighbor retrieval in vector DBs |
+| Two Pointers | Medium | Tensor merge operations, sorted data alignment for training batches |
+| Greedy | Low-Medium | Greedy decoding strategies, data selection for active learning |
+| Backtracking | Low | Architecture search, feature subset selection |
+| Union-Find | Low | Data clustering, deduplication in training datasets |
 
 **Difficulty Distribution:** 20% Medium, 60% Medium-Hard, 20% Hard
 
@@ -121,16 +123,16 @@ Interview patterns by company type. Use as a proxy when company-specific researc
 
 **DSA Focus:**
 
-| Pattern | Weight | Notes |
-|---------|--------|-------|
-| Hash Table | Very High | Most practical; maps to real engineering problems |
-| DFS/BFS | High | Tree/graph traversal for real features |
-| Two Pointers | Medium | String and array manipulation |
-| Sliding Window | Medium | Data processing, rate limiting |
-| Greedy | Medium | Practical optimization, scheduling |
-| Binary Search | Medium | Sorted data operations |
-| Dynamic Programming | Low-Medium | Rarely Hard DP; more focused on practical optimization |
-| Heap / Priority Queue | Low | When relevant to the product domain |
+| Pattern | Weight | Why They Test This |
+|---------|--------|--------------------|
+| Hash Table | Very High | Startups build CRUD apps, APIs, and caches — hash-based lookup is the bread and butter of every feature |
+| DFS/BFS | High | Feature trees (navigation, categories), permission hierarchies, and workflow DAGs are common startup patterns |
+| Two Pointers | Medium | String processing for user input validation, list deduplication, search result merging |
+| Sliding Window | Medium | Rate limiting user requests, real-time analytics dashboards, log stream processing |
+| Greedy | Medium | Feature prioritization logic, simple scheduling (notifications, batch jobs) |
+| Binary Search | Medium | Paginated data lookup, configuration threshold detection |
+| Dynamic Programming | Low-Medium | Rarely relevant to daily work; tested lightly to gauge problem-solving ability |
+| Heap / Priority Queue | Low | Notification priority, job queue ordering when product requires it |
 | Backtracking | Low | Rarely tested |
 | Union-Find | Low | Rarely tested |
 
@@ -155,18 +157,18 @@ Interview patterns by company type. Use as a proxy when company-specific researc
 
 **DSA Focus:**
 
-| Pattern | Weight | Notes |
-|---------|--------|-------|
-| Hash Table | Very High | Fundamental to all backend/product engineering |
-| DFS/BFS | High | Graph and tree problems |
-| Two Pointers | High | Array/string manipulation |
-| Sliding Window | High | Data processing, rate limiting |
-| Binary Search | Medium | Search and optimization |
-| Dynamic Programming | Medium | Moderate DP; rarely very hard |
-| Greedy | Medium | Practical optimization |
-| Heap / Priority Queue | Medium | Scheduling, priority systems |
-| Backtracking | Low | Occasional constraint problems |
-| Union-Find | Low | Networking/connectivity if domain-relevant |
+| Pattern | Weight | Why They Test This |
+|---------|--------|--------------------|
+| Hash Table | Very High | Payment dedup (Stripe), real-time collaboration state (Figma/Notion), message routing (Discord) — all hash-based |
+| DFS/BFS | High | Permission hierarchies, document trees (Notion), channel/server graphs (Discord), query plan traversal (Databricks) |
+| Two Pointers | High | Transaction log merging, collaborative cursor reconciliation, sorted data alignment |
+| Sliding Window | High | Rate limiting (Cloudflare), streaming data analytics (Databricks), real-time event processing |
+| Binary Search | Medium | Tiered pricing lookups, capacity threshold detection, version history search |
+| Dynamic Programming | Medium | Cost optimization in payment routing, query plan optimization (Databricks), cache eviction policies |
+| Greedy | Medium | Request scheduling, resource allocation, notification batching |
+| Heap / Priority Queue | Medium | Message delivery ordering (Discord), job scheduling, priority-based load balancing |
+| Backtracking | Low | Configuration space exploration, permission rule evaluation |
+| Union-Find | Low | Network partition detection (Cloudflare), account merging |
 
 **Difficulty Distribution:** 20% Easy-Medium, 60% Medium, 20% Medium-Hard
 
@@ -189,16 +191,16 @@ Interview patterns by company type. Use as a proxy when company-specific researc
 
 **DSA Focus:**
 
-| Pattern | Weight | Notes |
-|---------|--------|-------|
-| Hash Table | Very High | Lookup, caching, data transformation |
-| DFS/BFS | High | Tree traversal, dependency graphs |
-| Two Pointers | High | String and array manipulation |
-| Sliding Window | Medium | Data processing, streaming |
-| Binary Search | Medium | Sorted data operations |
-| Greedy | Medium | Scheduling, resource allocation |
-| Dynamic Programming | Low-Medium | Moderate DP; rarely multi-dimensional |
-| Heap / Priority Queue | Low-Medium | Task scheduling, priority queues |
+| Pattern | Weight | Why They Test This |
+|---------|--------|--------------------|
+| Hash Table | Very High | Customer record lookup, transaction caching, config mapping — hash tables power every enterprise CRUD operation |
+| DFS/BFS | High | Workflow DAGs (ServiceNow), org hierarchy traversal (Salesforce), fraud detection graphs (JPMorgan/Capital One) |
+| Two Pointers | High | Record deduplication, sorted ledger merging, data migration reconciliation |
+| Sliding Window | Medium | Real-time transaction monitoring, rolling compliance windows, streaming inventory updates (Walmart) |
+| Binary Search | Medium | Price tier lookups, regulatory threshold detection, sorted ledger queries |
+| Greedy | Medium | Job scheduling, warehouse allocation (Walmart), loan approval heuristics (Capital One) |
+| Dynamic Programming | Low-Medium | Tax computation optimization (Intuit), fee calculation chains — rarely multi-dimensional |
+| Heap / Priority Queue | Low-Medium | Ticket priority queues (ServiceNow), transaction processing order |
 | Backtracking | Low | Rarely tested |
 | Union-Find | Low | Rarely tested |
 
@@ -223,18 +225,18 @@ Interview patterns by company type. Use as a proxy when company-specific researc
 
 **DSA Focus:**
 
-| Pattern | Weight | Notes |
-|---------|--------|-------|
-| DFS/BFS | Very High | Graph traversal, network analysis, connected components |
-| Dynamic Programming | High | Optimization, resource allocation, path finding |
-| Binary Search | High | Search and optimization on sorted/monotonic data |
-| Hash Table | High | Lookup, deduplication, caching |
-| Union-Find | Medium | Network connectivity, component analysis |
-| Greedy | Medium | Scheduling, allocation, approximation |
-| Two Pointers | Medium | Array/string manipulation |
-| Heap / Priority Queue | Medium | Priority scheduling, top-K analysis |
-| Backtracking | Low-Medium | Constraint satisfaction, configuration search |
-| Sliding Window | Low | Streaming when relevant |
+| Pattern | Weight | Why They Test This |
+|---------|--------|--------------------|
+| DFS/BFS | Very High | Intelligence analysts traverse entity relationship graphs; network topology analysis and threat propagation modeling are core workflows |
+| Dynamic Programming | High | Resource allocation across missions, optimal path planning for autonomous systems, signal decoding |
+| Binary Search | High | Sensor data thresholding, geospatial range queries, sorted intelligence record lookup |
+| Hash Table | High | Entity deduplication across data sources, fast lookup in surveillance databases, classification mapping |
+| Union-Find | Medium | Network segmentation analysis, identifying connected threat actor clusters, communication group detection |
+| Greedy | Medium | Mission scheduling under constraints, bandwidth allocation, sensor coverage optimization |
+| Two Pointers | Medium | Log correlation between sorted event streams, data reconciliation across feeds |
+| Heap / Priority Queue | Medium | Threat priority triage, mission-critical task scheduling, top-K anomaly detection |
+| Backtracking | Low-Medium | Configuration search for secure system parameters, constraint satisfaction in mission planning |
+| Sliding Window | Low | Time-windowed anomaly detection in streaming sensor data |
 
 **Difficulty Distribution:** 15% Easy-Medium, 50% Medium, 35% Medium-Hard
 
