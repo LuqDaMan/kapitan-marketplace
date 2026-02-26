@@ -1,6 +1,6 @@
 ---
 name: technical-interview-roadmap
-description: This skill should be used when the user wants a technical interview preparation roadmap, coding interview study plan, or DSA practice plan tailored to a specific company and role. Trigger phrases include "technical interview roadmap", "coding interview prep for", "DSA roadmap for", "DSA study plan", "leetcode prep for", "what problems should I practice for", "interview study plan", "prep me for the technical rounds", "technical prep for", "what should I study for", "coding prep plan", "roadmap from this JD", "technical prep from job posting", "DSA roadmap from JD URL", "prep me for this role [URL]", or requests for technical interview preparation with a JD URL or pasted job description.
+description: This skill should be used when the user wants a technical interview preparation roadmap, coding interview study plan, or DSA practice plan tailored to a specific company and role. Trigger phrases include "technical interview roadmap", "coding interview prep for", "DSA roadmap for", "DSA study plan", "leetcode prep for", "what problems should I practice for", "interview study plan", "prep me for the technical rounds", "technical prep for", "what should I study for", "coding prep plan", "roadmap from this JD", "prep me for this role [URL]", or providing a JD URL with a request for technical interview preparation.
 ---
 
 # Technical Interview Roadmap
@@ -16,9 +16,10 @@ Generate a company-specific technical interview study plan from a JD URL or past
 5. **Read-only on learner profile.** Never modify `~/.claude/leetcode-teacher-profile.md`. Read it for calibration only.
 6. **15-25 problems total.** The problem list must be actionable, not overwhelming. Quality over quantity.
 7. **Every problem needs a "Why."** Connect each problem to the company domain, role requirements, or a learner weakness. No generic filler entries.
-8. **No system design content.** This roadmap covers DSA/coding problems only. Explicitly disclaim system design in the output.
-9. **Difficulty matches role level + company competitiveness.** Role level sets the base difficulty (Junior = Easy-Medium, Mid = Medium, Senior = Medium-Hard). Competitive firms (FAANG, Quant/HFT, AI Labs, Government/Defense) warrant additional stretch problems above the base — see Difficulty Calibration in Quick Reference.
-10. **URL fetch tool priority.** When fetching a JD URL, use Exa `crawling_exa` as primary. Fall back to `WebFetch` if Exa is unavailable. If neither works, ask the user to paste the JD text directly.
+8. **Companies test what they build.** Interview questions are not chosen at random. Companies select problems that test the foundational concepts their engineers use daily. A payments company asks graph problems because fraud detection traverses transaction graphs. A trading firm asks DP because optimal execution is a dynamic programming problem. A search company asks trie/string problems because their core product is text retrieval. Always reason backward from "what does this company's engineering team actually build?" to "what concepts must their engineers be fluent in?" to "which problems test those concepts?" Every problem in the roadmap must trace back to the company's business, tech stack, or core engineering challenges — not just to generic pattern frequency.
+9. **No system design content.** This roadmap covers DSA/coding problems only. Explicitly disclaim system design in the output.
+10. **Difficulty matches role level + company competitiveness.** Role level sets the base difficulty (Junior = Easy-Medium, Mid = Medium, Senior = Medium-Hard). Competitive firms (FAANG, Quant/HFT, AI Labs, Government/Defense) warrant additional stretch problems above the base — see Difficulty Calibration in Quick Reference.
+11. **URL fetch tool priority.** When fetching a JD URL, use Exa `crawling_exa` as primary. Fall back to `WebFetch` if Exa is unavailable. If neither works, ask the user to paste the JD text directly.
 
 ---
 
@@ -86,6 +87,13 @@ Use Exa MCP tools (`web_search_exa`, `crawling_exa`) as primary research tools. 
 4. `"<company> <role> technical interview"` — public interview process information
 5. Crawl top 2-3 engineering blog URLs from query 1 for deeper context
 
+**Extract core engineering challenges (Critical Rule 8).** From the research, identify the 3-5 core engineering problems the company's team solves daily. Examples:
+- Stripe → real-time payment routing, fraud graph traversal, idempotent transaction processing
+- Spotify → recommendation ranking at scale, audio stream chunking, collaborative filtering
+- Cloudflare → packet-level routing optimization, DDoS pattern detection, edge cache invalidation
+
+These engineering challenges drive Step 5 topic prioritization and Step 6b problem selection. If research is thin, infer challenges from the company archetype and JD signals.
+
 **Hard ban:** No Glassdoor, Blind, LeetCode Discuss company tags, or any paywalled source. If a search result comes from a banned source, skip it.
 
 **Thin research fallback:** If fewer than 3 substantive results are found:
@@ -112,17 +120,19 @@ Read `~/.claude/leetcode-teacher-profile.md` if it exists. Extract:
 
 ### Step 5: Build Topic Roadmap
 
-Synthesize Steps 2-4 into a prioritized topic list. Each topic gets:
+Synthesize Steps 2-4 into a prioritized topic list. **Reason backward from the company's engineering challenges** (Critical Rule 8): what does the company build → what concepts do their engineers use daily → what DSA patterns test those concepts → which problems exercise those patterns?
 
-- **Company-specific reasoning** — why this topic matters for this company/role
+Each topic gets:
+
+- **Company-specific reasoning** — the concrete engineering challenge at this company that makes this topic relevant. Not "Graph algorithms are common" but "Stripe's fraud detection system traverses transaction graphs to find anomalous payment chains, so they test graph traversal to ensure engineers can reason about connected components and path finding."
 - **Priority tier:**
-  - **Tier 1 (Must-Know):** Directly mentioned in JD or core to company's engineering domain
-  - **Tier 2 (Likely):** Common for this role type and company archetype
-  - **Tier 3 (Stretch):** Could differentiate the candidate; covers edge cases
+  - **Tier 1 (Must-Know):** Directly maps to a core engineering challenge identified in Step 3, or explicitly mentioned in the JD
+  - **Tier 2 (Likely):** Maps to the company archetype's engineering domain or is common for this role type
+  - **Tier 3 (Stretch):** Could differentiate the candidate; covers adjacent engineering concerns
 - **Difficulty calibration** — Easy/Medium/Hard distribution based on role level and company competitiveness (see Difficulty Calibration in Quick Reference)
 - **Estimated problem count** — how many problems from this topic in the final list
 
-Use `references/domain-topic-mapping.md` for domain → topic mapping.
+Use `references/domain-topic-mapping.md` for domain → topic mapping. Use the core engineering challenges from Step 3 as the primary driver for Tier 1 selection — domain-topic-mapping is supplementary context, not the sole source.
 
 Pattern names MUST match the leetcode-teacher taxonomy. See the Quick Reference section below for the canonical list.
 
@@ -168,7 +178,7 @@ Select 15-25 specific LeetCode problems. Use both `references/curated-problem-ba
 - Difficulty (Easy/Medium/Hard)
 - Primary pattern (or "untagged" for company-frequent problems not in the curated bank)
 - Company frequency% (if available from enrichment)
-- A 1-line "Why" rationale connecting it to the company, role, or learner weakness
+- A 1-line "Why" rationale that traces back to a specific engineering challenge, tech stack component, or business problem at the company. Bad: "Common DP problem." Good: "Citadel's optimal execution engine uses DP to minimize market impact — this tests the same state-transition reasoning." Acceptable fallback for learner-weakness picks: "Targets tracked pointer-mechanics weakness."
 
 ### Step 7: Generate Study Plan
 
@@ -203,130 +213,7 @@ hojicha/<company>-<role>-resume/
   technical-roadmap.md   # Generated by Step 8
 ```
 
----
-
-## Output Structure
-
-The generated `technical-roadmap.md` should follow this structure:
-
-```markdown
-# Technical Interview Roadmap: <Company> — <Role>
-
-> **Scope:** DSA/coding problems only. This roadmap does not cover system design, behavioral interviews, or domain-specific knowledge assessments.
-
-## Company Engineering Profile
-
-| Dimension | Finding | Source |
-|-----------|---------|--------|
-| JD Source | [URL / pasted text] | — |
-| Primary Languages | ... | [URL] |
-| Core Infrastructure | ... | [URL] |
-| Key Problem Domains | ... | [URL] |
-| Interview Format (if public) | ... | [URL] |
-
-*Note: [Include thin-research disclaimer here if applicable]*
-
-## Technical Signals from JD
-
-| JD Signal | DSA Implication | Priority |
-|-----------|----------------|----------|
-| "distributed systems experience" | Graph algorithms, BFS/DFS | Tier 1 |
-| "optimize data pipelines" | Dynamic Programming, Greedy | Tier 1 |
-| ... | ... | ... |
-
-## Learner Calibration
-
-**Profile status:** [Found / Not found — defaulting to Intermediate]
-**Detected level:** [Beginner / Intermediate / Advanced]
-**Difficulty focus:** [Easy-Medium / Medium / Medium-Hard]
-
-**Tracked weaknesses relevant to this roadmap:**
-- [Weakness label] — [how it affects problem selection]
-- ...
-
-**Already-practiced patterns:** [list patterns with coverage from session history]
-
-## Topic Roadmap
-
-### Tier 1: Must-Know
-
-#### [Pattern Name]
-- **Why:** [Company-specific reasoning]
-- **Problems:** [N] problems
-- **Difficulty:** [Easy-Medium / Medium / Medium-Hard]
-
-### Tier 2: Likely
-
-#### [Pattern Name]
-- **Why:** [Reasoning]
-- **Problems:** [N] problems
-- **Difficulty:** [Distribution]
-
-### Tier 3: Stretch
-
-#### [Pattern Name]
-- **Why:** [Reasoning]
-- **Problems:** [N] problems
-- **Difficulty:** [Distribution]
-
-## Problem List
-
-### Phase 1: Foundations (~[N] days)
-
-*Use leetcode-teacher Learning Mode for new patterns.*
-
-| # | Problem | Difficulty | Pattern | Freq | Why |
-|---|---------|-----------|---------|------|-----|
-| 1 | [Name] (LC #) | Easy | Hash Table | 75% | [1-line rationale] |
-| 2 | [Name] (LC #) | Medium | Two Pointers | — | [1-line rationale] |
-| ... | ... | ... | ... | ... | ... |
-
-### Phase 2: Core Depth (~[N] days)
-
-*Use leetcode-teacher Learning Mode for new problems. Recall Mode for Phase 1 revisits.*
-
-| # | Problem | Difficulty | Pattern | Freq | Why |
-|---|---------|-----------|---------|------|-----|
-| ... | ... | ... | ... | ... | ... |
-
-### Phase 3: Edge Sharpening (~[N] days)
-
-*Use leetcode-teacher Recall Mode for revisits. Focus on timed practice.*
-
-| # | Problem | Difficulty | Pattern | Freq | Why |
-|---|---------|-----------|---------|------|-----|
-| ... | ... | ... | ... | ... | ... |
-
-## Study Timeline
-
-| Week | Phase | Focus | Daily Target |
-|------|-------|-------|-------------|
-| 1 | Foundations | [Topics] | 2-3 problems/day |
-| 2 | Core Depth | [Topics] | 2 problems/day |
-| 3 | Edge Sharpening | [Topics] | 1-2 problems/day + revisits |
-
-## Weakness Remediation Plan
-
-| Weakness | Target Problems | Phase | Strategy |
-|----------|----------------|-------|----------|
-| [From learner profile] | LC #, LC # | 1-2 | [How to address] |
-| ... | ... | ... | ... |
-
-## Sources
-
-| # | URL | What It Informed |
-|---|-----|-----------------|
-| 1 | [URL] | Tech stack identification |
-| 2 | [URL] | Interview format |
-| ... | ... | ... |
-
-## Raw JD
-
-> Source: [URL or "pasted text"]
-> Extracted: <date>
-
-<full JD text preserved for reference>
-```
+Follow the output template in `references/output-template.md`.
 
 ---
 

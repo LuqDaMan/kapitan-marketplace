@@ -13,6 +13,7 @@
 3. **Filter by domain tags** — prefer problems tagged with the target company's domain
 4. **Select 15-25 problems** total across all patterns
 5. **Ensure progression** — within each pattern, include Easy → Medium → Hard
+6. **Deduplicate** — some problems appear in multiple pattern sections (e.g., LC 76, 42). Count each problem only once regardless of which pattern section it was selected from
 
 **Domain Tags Key:**
 - `general` — universally relevant, no domain bias

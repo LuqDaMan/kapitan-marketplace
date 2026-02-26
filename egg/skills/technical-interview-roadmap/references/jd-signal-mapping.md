@@ -76,7 +76,7 @@ These don't map to specific DSA topics but indicate interview style and difficul
 
 ## Gap Analysis → Study Priorities
 
-When the resume-builder gap analysis identifies missing skills, map them to urgent study topics:
+When JD analysis reveals skill gaps, map them to urgent study topics:
 
 | Gap Type | Priority Boost | Reasoning |
 |----------|---------------|-----------|
