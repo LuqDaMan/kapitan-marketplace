@@ -1,7 +1,11 @@
 #!/bin/bash
 # Wrapper script for mcp-google-sheets.
-# Claude Code plugin system doesn't interpolate ${ENV_VAR} in .mcp.json, so we use
-# this script to expand env vars at runtime.
+# Claude Code plugin system doesn't interpolate ${ENV_VAR} in .mcp.json args,
+# and MCP server processes don't inherit the user's shell environment.
+# We source ~/.zshenv to pick up GOOGLE_SERVICE_ACCOUNT_PATH and HOJICHA_FOLDER_ID.
+
+# Source user env vars (MCP processes don't inherit shell environment)
+[[ -f "$HOME/.zshenv" ]] && source "$HOME/.zshenv"
 
 # === DEBUG LOGGING (temporary) ===
 LOG="/tmp/gsheets-mcp-debug.log"
