@@ -2,7 +2,7 @@
 # PreCompact hook: Write a minimal procedural reminder before context compaction.
 # No transcript parsing, no semantic extraction — just a procedural nudge.
 
-SCRATCHPAD="$HOME/.claude/leetcode-session-state.md"
+SCRATCHPAD="$HOME/.local/share/claude/leetcode-session-state.md"
 INPUT=$(cat)
 TRANSCRIPT=$(echo "$INPUT" | jq -r '.transcript_path // empty' 2>/dev/null)
 
@@ -21,7 +21,7 @@ if [ -n "$TRANSCRIPT" ] && [ -f "$TRANSCRIPT" ] && grep -q "leetcode-teacher" "$
 
   cat > "$SCRATCHPAD" << EOF
 # LeetCode Session In Progress (saved before compaction)
-- You are in a leetcode-teacher session. Read ~/.claude/leetcode-teacher-profile.md for context.
+- You are in a leetcode-teacher session. Read ~/.local/share/claude/leetcode-teacher-profile.md for context.
 - Session ID: ${SESSION_ID}
 - Session Timestamp: ${SESSION_TS}
 - Write-back required at session end: Step 8B (learning) or R7B (recall).

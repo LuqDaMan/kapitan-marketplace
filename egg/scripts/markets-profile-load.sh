@@ -2,8 +2,9 @@
 # SessionStart hook: Load, validate, and sync-heal the markets teacher profile.
 # Stdout is injected into Claude's context at session start.
 
-PROFILE="$HOME/.claude/markets-teacher-profile.md"
-LEDGER="$HOME/.claude/markets-teacher-ledger.md"
+DATA_DIR="$HOME/.local/share/claude"
+PROFILE="$DATA_DIR/markets-teacher-profile.md"
+LEDGER="$DATA_DIR/markets-teacher-ledger.md"
 
 # Extract session_id from hook input JSON (stdin)
 INPUT=$(cat)
@@ -14,7 +15,7 @@ fi
 
 # --- First session: create both files with templates ---
 if [ ! -f "$PROFILE" ]; then
-  mkdir -p "$HOME/.claude"
+  mkdir -p "$DATA_DIR"
 
   cat > "$PROFILE" << 'PROFILE_TEMPLATE'
 ## About Me

@@ -64,6 +64,6 @@ elif [ "$LEDGER_WRITTEN" -gt 0 ]; then
   echo "Ledger was updated but profile was not. Update the profile session history and known weaknesses." >&2
   exit 2
 else
-  echo "This leetcode-teacher session ended without updating the learner profile or ledger. Complete Step 8B/R7B: write the ledger row first (source of truth), then update the profile. Both files at ~/.claude/." >&2
+  echo "This leetcode-teacher session ended without updating the learner profile or ledger. Complete Step 8B/R7B: write the ledger row first (source of truth), then update the profile. Both files at ~/.local/share/claude/." >&2
   exit 2
 fi

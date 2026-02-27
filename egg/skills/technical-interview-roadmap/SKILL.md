@@ -13,7 +13,7 @@ Generate a company-specific technical interview study plan from a JD URL or past
 2. **No paywalled sources.** Only use public engineering blogs, GitHub, official company pages, YouTube tech talks. Hard ban on Glassdoor, Blind, LeetCode Discuss company tags, or any paywalled content.
 3. **Cite all research.** Every company engineering claim needs a source URL in the appendix. No unsourced assertions about tech stack or interview process.
 4. **Align with leetcode-teacher taxonomy.** All pattern names, classifications, and difficulty labels must match `references/frameworks/problem-patterns.md` from the leetcode-teacher skill. Use the exact pattern names: Two Pointers, Sliding Window, Binary Search, Dynamic Programming, DFS/BFS, Backtracking, Greedy, Hash Table, Heap / Priority Queue, Union-Find.
-5. **Read-only on learner profile.** Never modify `~/.claude/leetcode-teacher-profile.md`. Read it for calibration only.
+5. **Read-only on learner profile.** Never modify `~/.local/share/claude/leetcode-teacher-profile.md`. Read it for calibration only.
 6. **15-25 problems total.** The problem list must be actionable, not overwhelming. Quality over quantity.
 7. **Every problem needs a "Why."** Connect each problem to the company domain, role requirements, or a learner weakness. No generic filler entries.
 8. **Companies test what they build.** Interview questions are not chosen at random. Companies select problems that test the foundational concepts their engineers use daily. A payments company asks graph problems because fraud detection traverses transaction graphs. A trading firm asks DP because optimal execution is a dynamic programming problem. A search company asks trie/string problems because their core product is text retrieval. Always reason backward from "what does this company's engineering team actually build?" to "what concepts must their engineers be fluent in?" to "which problems test those concepts?" Every problem in the roadmap must trace back to the company's business, tech stack, or core engineering challenges — not just to generic pattern frequency.
@@ -38,7 +38,7 @@ The user provides a JD URL or pastes JD text. This is the only JD input — the 
 Also read these optional files if they exist:
 ```
 Optional:
-- ~/.claude/leetcode-teacher-profile.md (learner profile for calibration)
+- ~/.local/share/claude/leetcode-teacher-profile.md (learner profile for calibration)
 - hojicha/candidate-context.md (discovery interview context — technical background, project details)
 ```
 
@@ -105,7 +105,7 @@ These engineering challenges drive Step 5 topic prioritization and Step 6b probl
 
 ### Step 4: Load Learner Profile
 
-Read `~/.claude/leetcode-teacher-profile.md` if it exists. Extract:
+Read `~/.local/share/claude/leetcode-teacher-profile.md` if it exists. Extract:
 
 - **Known Weaknesses** — recurring and improving weaknesses (these become priority study targets)
 - **Session History** — which patterns and problems have been practiced (avoid duplicates)

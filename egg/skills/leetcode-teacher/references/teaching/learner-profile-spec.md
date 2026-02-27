@@ -4,7 +4,7 @@ Two persistent files store cross-session learning state. Claude reads the profil
 
 ---
 
-## File 1: `~/.claude/leetcode-teacher-profile.md` (Working Memory)
+## File 1: `~/.local/share/claude/leetcode-teacher-profile.md` (Working Memory)
 
 Read at every session start (loaded by SessionStart hook). Capped sections. Three required sections:
 
@@ -83,7 +83,7 @@ For Recall Mode, use the R7 verdict directly: `strong_pass`, `pass`, `borderline
 
 ---
 
-## File 2: `~/.claude/leetcode-teacher-ledger.md` (Long-Term Record)
+## File 2: `~/.local/share/claude/leetcode-teacher-ledger.md` (Long-Term Record)
 
 Append-only markdown table. Never edited, never capped, never read at session start.
 
@@ -118,7 +118,7 @@ Append-only markdown table. Never edited, never capped, never read at session st
 
 ## ISO Timestamp Format
 
-All timestamps use: `YYYY-MM-DDTHH:MM` (e.g., `2026-02-19T14:30`). No seconds, no timezone. Source: `Session Timestamp` from `=== SESSION METADATA ===` (injected at session start), or from `~/.claude/leetcode-session-state.md` (after compaction), or via `date +%Y-%m-%dT%H:%M` bash fallback if neither is available.
+All timestamps use: `YYYY-MM-DDTHH:MM` (e.g., `2026-02-19T14:30`). No seconds, no timezone. Source: `Session Timestamp` from `=== SESSION METADATA ===` (injected at session start), or from `~/.local/share/claude/leetcode-session-state.md` (after compaction), or via `date +%Y-%m-%dT%H:%M` bash fallback if neither is available.
 
 ## Session ID
 
@@ -132,17 +132,17 @@ Extracted from hook input JSON (`session_id` field). Used in ledger rows for deb
 
 Use a single Session Timestamp for all writes in a session — ledger row, profile session header, and all weakness field updates (`Last tested`, `Last failed`, `Last clean streak start`, `First observed`). Source precedence:
 1. `Session Timestamp` from `=== SESSION METADATA ===` (injected at session start)
-2. `Session Timestamp` from `~/.claude/leetcode-session-state.md` (after compaction)
+2. `Session Timestamp` from `~/.local/share/claude/leetcode-session-state.md` (after compaction)
 3. **Fallback** (neither available — hook failure or manual invocation): run `date +%Y-%m-%dT%H:%M` via Bash tool to get the current time
 
 ### Update Protocol — Learning Mode
 
 After generating study notes, update the persistent learner profile. **Write ledger first (source of truth), then profile (elaboration).**
 
-1. **Append row to Ledger** (`~/.claude/leetcode-teacher-ledger.md`):
+1. **Append row to Ledger** (`~/.local/share/claude/leetcode-teacher-ledger.md`):
    - Session Timestamp (per timestamp rule above), session_id (from `=== SESSION METADATA ===` or `leetcode-session-state.md`, else `manual`), problem name, pattern, mode (`learning`), verdict label (`solved_independently` / `solved_with_minor_hints` / `solved_with_significant_scaffolding` / `did_not_reach_solution`), gaps (semicolon-separated tags, or `none`), review due date.
 
-2. **Append to Session History** in profile (`~/.claude/leetcode-teacher-profile.md`), newest first. Enforce 20-entry cap by removing the oldest entry if needed. Use the semi-structured format:
+2. **Append to Session History** in profile (`~/.local/share/claude/leetcode-teacher-profile.md`), newest first. Enforce 20-entry cap by removing the oldest entry if needed. Use the semi-structured format:
    ```
    ### [ISO timestamp] | [problem-name] | learning | [verdict_label]
    Gaps: [semicolon-separated tags, or "none"]
@@ -164,7 +164,7 @@ After generating study notes, update the persistent learner profile. **Write led
 
 After the R7 debrief, update the persistent learner profile. **Write ledger first, then profile.**
 
-1. **Append row to Ledger** (`~/.claude/leetcode-teacher-ledger.md`):
+1. **Append row to Ledger** (`~/.local/share/claude/leetcode-teacher-ledger.md`):
    - Session Timestamp (per timestamp rule above), session_id (from `=== SESSION METADATA ===` or `leetcode-session-state.md`, else `manual`), problem, pattern, mode (`recall`), verdict from R7 (`strong_pass` / `pass` / `borderline` / `needs_work`), gaps (semicolon-separated tags), review due date.
    - **Review interval from R7 verdict:** Strong Pass = previous interval x2 (minimum 7d), Pass = previous interval x1.5 (minimum 5d), Borderline = 2d, Needs Work = 1d. If no previous interval exists, use the minimums.
 

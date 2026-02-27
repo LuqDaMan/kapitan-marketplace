@@ -192,9 +192,9 @@ The SessionStart hook automatically loads the learner profile into context. Look
 - **Session continuity:** Read the last 5 session history entries. Acknowledge trajectory ("Last time you worked on sliding window and caught the edge case you'd been missing — nice progress").
 - **About Me:** Use for calibration (language preference, level, goals). If `[FIRST SESSION]` tag is present, populate About Me from observations during the session and confirm at end.
 
-**Post-compaction recovery:** If `~/.claude/leetcode-session-state.md` exists, read it for procedural reminders (session ID, **session timestamp**, write-back requirements). Rename the file to `~/.claude/leetcode-session-state.md.processed` after reading.
+**Post-compaction recovery:** If `~/.local/share/claude/leetcode-session-state.md` exists, read it for procedural reminders (session ID, **session timestamp**, write-back requirements). Rename the file to `~/.local/share/claude/leetcode-session-state.md.processed` after reading.
 
-**Fallback** (hook didn't fire, no `=== LEARNER PROFILE ===` in context): Read `~/.claude/leetcode-teacher-profile.md` manually. If it doesn't exist, create both files with templates per `references/teaching/learner-profile-spec.md`.
+**Fallback** (hook didn't fire, no `=== LEARNER PROFILE ===` in context): Read `~/.local/share/claude/leetcode-teacher-profile.md` manually. If it doesn't exist, create both files with templates per `references/teaching/learner-profile-spec.md`.
 
 **Behavioral rule:** Use profile silently to calibrate. Don't dump contents to the learner. Reference specific observations naturally when relevant (e.g., "I notice you've struggled with empty input checks before — let's make sure we cover that").
 
@@ -337,9 +337,9 @@ Produce structured Markdown study notes (see Output Format below). Offer to save
 
 After generating study notes, perform BOTH writes in order. Consult `references/teaching/learner-profile-spec.md` Section "Update Protocol — Learning Mode" for full details.
 
-**Write 1 — Ledger (mandatory, do this first).** Append one row to `~/.claude/leetcode-teacher-ledger.md`. If the file does not exist, create it with the header row first. Columns: `Timestamp | Session ID | Problem | Pattern | Mode | Verdict | Gaps | Review Due`. This is the source of truth.
+**Write 1 — Ledger (mandatory, do this first).** Append one row to `~/.local/share/claude/leetcode-teacher-ledger.md`. If the file does not exist, create it with the header row first. Columns: `Timestamp | Session ID | Problem | Pattern | Mode | Verdict | Gaps | Review Due`. This is the source of truth.
 
-**Write 2 — Profile.** Append to Session History (newest first, 20-entry cap) and update Known Weaknesses in `~/.claude/leetcode-teacher-profile.md`. Verdict and gap tags must match the ledger row exactly.
+**Write 2 — Profile.** Append to Session History (newest first, 20-entry cap) and update Known Weaknesses in `~/.local/share/claude/leetcode-teacher-profile.md`. Verdict and gap tags must match the ledger row exactly.
 
 Use Session Timestamp from `=== SESSION METADATA ===` context (see spec for fallback chain). On first session, show About Me draft and ask learner to confirm.
 

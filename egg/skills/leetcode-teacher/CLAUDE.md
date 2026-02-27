@@ -83,7 +83,7 @@ Mode transitions: upshift to recall when learner shows mastery, downshift to lea
 
 ## Persistent State (Cross-Session)
 
-The skill writes two files to `~/.claude/` via the SessionStart hook:
+The skill writes two files to `~/.local/share/claude/` via the SessionStart hook:
 - `leetcode-teacher-ledger.md` — append-only session log (source of truth)
 - `leetcode-teacher-profile.md` — working memory with Known Weaknesses (max 10, status lifecycle: new → recurring → improving → resolved)
 
