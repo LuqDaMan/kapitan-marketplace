@@ -70,6 +70,9 @@ Present the plan to the user. They must approve the task list, ordering, and per
 
 ### Step 5: Context-Aware Validation
 
+The iteration protocol that Claude reads each loop iteration is defined in:
+@references/iteration-protocol.md
+
 For each task, estimate context load:
 - Sum the line counts of declared spec sections + declared codebase files + task body + iteration protocol (~60 lines)
 - Flag any task estimated to exceed ~1500 lines of combined input
