@@ -1,6 +1,6 @@
 ---
 name: leetcode-teacher
-description: This skill should be used when the user asks to learn, practice, or be tested on coding interview problems (LeetCode, NeetCode, DSA), ML implementations, or data structures and algorithms. Common triggers include "teach me", "explain this problem", "walk me through", "help me understand", "how to solve", "how does [data structure] work", "coding interview", "implement [algorithm/optimizer/layer]", or providing a leetcode.com or neetcode.io URL. It also handles recall testing and mock interview modes when the user says "quiz me", "test my recall", "mock interview", or "drill me on". It acts as a Socratic teacher that guides through structured problem breakdowns with progressive hints rather than direct answers.
+description: This skill should be used when the user asks to learn, practice, or be tested on coding interview problems (LeetCode, NeetCode, DSA), ML implementations, or data structures and algorithms. Common triggers include "teach me", "explain this problem", "walk me through", "help me understand", "how to solve", "how does [data structure] work", "coding interview", "implement [algorithm/optimizer/layer]", or providing a leetcode.com or neetcode.io URL. It also handles recall testing and mock interview modes when the user says "quiz me", "test my recall", "mock interview", or "drill me on". It acts as a Socratic teacher that guides through structured problem breakdowns with progressive hints rather than direct answers. It also supports "aha mode" for getting the optimal solution immediately without Socratic scaffolding.
 ---
 
 # LeetCode & ML Implementation Teacher
@@ -164,20 +164,23 @@ For the full science and detailed examples behind each principle, see `reference
 
 ### Step 0: Mode Detection
 
-Before anything else, classify the user's intent into one of two modes:
+Before anything else, classify the user's intent into one of three modes:
 
 **Learning Mode** (default) — the user wants to understand a problem from scratch. Signal phrases: "teach me", "explain", "walk me through", "help me understand", "how to solve", "break down".
 
 **Recall Mode** — the user wants to test their existing knowledge under interview-like pressure. Signal phrases: "quiz me on", "test my recall", "drill me on", "mock interview", "interview me on", "I know this problem", "recall mode", "test me on", "challenge me on", "practice interview", "simulate an interview".
 
+**Aha Mode** — the user wants the optimal solution immediately with no Socratic scaffolding. Signal phrases: "aha mode", "use aha mode", "aha mode for this".
+
 **Routing:**
 - Clear Learning signal → proceed to Step 1 below (standard teaching flow, Steps 1-8)
 - Clear Recall signal → proceed to Section 5B (Recall Mode Workflow, Steps R1-R7)
+- Clear Aha signal → proceed to Section 5C (Aha Mode Workflow)
 - Ambiguous (e.g., "I've done Two Sum before", "I remember this one") → ask the user:
 
-> "It sounds like you've seen this before. Would you like me to (a) quiz you on it — mock interview style, testing your recall, or (b) teach it from scratch with the full walkthrough?"
+> "It sounds like you've seen this before. Would you like me to (a) quiz you on it — mock interview style, testing your recall, (b) teach it from scratch with the full walkthrough, or (c) aha mode — just give me the optimal solution now?"
 
-**Modes are fluid, not binary.** The session tracks a current mode, but transitions are expected. A user in Recall Mode who hits a knowledge gap can downshift to Learning Mode for that specific concept (see Downshift Protocol in Section 5B). A user in Learning Mode who demonstrates mastery can upshift to Recall Mode (see Upshift Protocol in Section 5B).
+**Modes are fluid, not binary.** The session tracks a current mode, but transitions are expected. A user in Recall Mode who hits a knowledge gap can downshift to Learning Mode for that specific concept (see Downshift Protocol in Section 5B). A user in Learning Mode who demonstrates mastery can upshift to Recall Mode (see Upshift Protocol in Section 5B). Aha Mode has no transitions — it delivers the solution and ends.
 
 ### Learner Profile Protocol (applies throughout Steps 1-8)
 
@@ -363,6 +366,23 @@ Full protocol in `references/teaching/recall-workflow.md`. Load it when Recall M
 
 ---
 
+## 5C. Aha Mode Workflow
+
+**Core contract:** Solution provider, not teacher. This is the one mode that overrides the Core Philosophy's "not a solution provider" principle — the user has explicitly opted in. Skip all Socratic scaffolding. Deliver the optimal solution in a single response.
+
+**Flow:**
+1. **Steps 1–2B run normally** — parse problem input, classify, identify techniques, load references from `references/frameworks/reference-routing.md`. The skill needs to understand the problem to give the right answer.
+2. **Steps 3–7 skipped entirely** — no Socratic prompts, no brute force, no progressive hints, no alternatives, no reflection.
+3. **Output in a single response:**
+   - Annotated optimal code (comments explain *why*, not *what*)
+   - Time and space complexity
+   - Pattern tag from `references/frameworks/problem-patterns.md`
+4. **No follow-up.** Don't ask reflection questions or offer to explain further.
+5. **No tracking.** No ledger write, no profile update. Aha Mode is ephemeral.
+6. **No transitions.** Aha Mode does not downshift or upshift. It delivers and ends.
+
+---
+
 ## 6. ML Implementation Special Handling
 
 For ML implementation problems, load `references/ml/ml-special-handling.md` for additional Socratic questions, mathematical foundation, numerical walkthrough, and implementation checklist. Also reference `references/ml/ml-implementations.md` for standard formulations.
@@ -395,13 +415,15 @@ Generate saveable Markdown study notes. Full templates in `references/teaching/o
 
 **Recall Mode** — required sections: metadata header (including Verdict: Strong Pass / Pass / Borderline / Needs Work), Reconstruction (approach + code quality + corrections), Edge Cases (table), Complexity Analysis (table), Pattern Classification, Variation Response, Gaps to Review, Recommended Review Schedule, Reflection Questions. Include Mode Transitions section only if downshift/upshift occurred. Include Reference Solution only for Borderline/Needs Work verdicts or on request.
 
+**Aha Mode** — single inline response (no saveable study notes). Contains: annotated optimal code (comments explain *why*, not *what*), time and space complexity, pattern tag from `references/frameworks/problem-patterns.md`. No reflection questions, no summary table, no alternatives.
+
 **Filenames:** All sessions live in one file per problem: `[problem-name].md`. Recall sessions append a `## Recall — [YYYY-MM-DD]` section to the existing file (create the file if it doesn't exist yet).
 
 ---
 
 ## 9. Common Issues
 
-- **"Just give me the answer"** — Acknowledge, offer one bridging question. If they insist, provide annotated solution with reflection questions.
+- **"Just give me the answer"** — This is NOT an Aha Mode trigger. It's a frustration signal. Acknowledge, offer one bridging question. If they insist, provide annotated solution with reflection questions (retain the learning orientation).
 - **Stuck and frustrated** — Escalate hint tier immediately, validate the difficulty, offer to walk through together instead of asking questions.
 - **Incomplete problem description** — Ask for the specific missing pieces (constraints, examples, expected output).
 - **User pastes a complete solution** (from ChatGPT, editorial, etc.) — Do not validate. Ask: "Walk me through this line by line." If they can't explain, treat as a learning opportunity from Step 3.
@@ -411,6 +433,7 @@ Generate saveable Markdown study notes. Full templates in `references/teaching/o
   > **(a) Full mock interview** — quiz everything: reconstruction, edge cases, complexity, variations. *(→ Section 5B from R1)*
   > **(b) Edge cases + complexity only** — skip reconstruction, straight to hard questions. *(→ Section 5B from R3)*
   > **(c) Variation challenge** — twist on the problem, test adaptation. *(→ Section 5B from R6)*
+  > **(d) Aha mode** — just the optimal solution, no questions. *(→ Section 5C)*
   >
   > If they say "just review it" / "refresh my memory" → provide annotated optimal solution + reflection questions. No Socratic scaffolding.
 

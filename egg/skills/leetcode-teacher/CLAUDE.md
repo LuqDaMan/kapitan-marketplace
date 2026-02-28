@@ -74,12 +74,13 @@ evaluations/
 
 The AUTO integrity tests are the ones to run after adding/renaming reference files.
 
-## Two Modes, Two Personas
+## Three Modes, Three Personas
 
 - **Learning Mode** (default): 6-section structure, progressive hints (Tier 1 → 2 → 3), brute force before optimal
 - **Recall Mode**: Interviewer persona, neutral acknowledgments, R1-R7 protocol, verdict assignment (Strong Pass / Pass / Borderline / Needs Work)
+- **Aha Mode**: Solution provider, delivers optimal solution immediately. No Socratic scaffolding, no tracking, no transitions. Triggered by "aha mode" keyword.
 
-Mode transitions: upshift to recall when learner shows mastery, downshift to learning for knowledge gaps.
+Mode transitions: upshift to recall when learner shows mastery, downshift to learning for knowledge gaps. Aha Mode has no transitions — it delivers and ends.
 
 ## Persistent State (Cross-Session)
 
